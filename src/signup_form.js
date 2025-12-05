@@ -3,10 +3,10 @@ import "./signup.css";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    fullname: "",
-    Lastname: "",
+    firstname: "",
+    lastname: "",
     email: "",
-    Gender: "male",
+    gender: "male",
     password: "",
     weight: "",
     height: "",
@@ -18,26 +18,60 @@ const Signup = () => {
   };
 
   // Handle submit with POST API
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
+  try {
+    const response = await fetch("http://localhost:7000/users/adduser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+
+    let data = null;
+
+    // Try reading JSON safely
     try {
-      const response = await fetch("YOUR_API_URL_HERE", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await response.json();
-      console.log(result);
-      alert("Signup successful!");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      alert("Something went wrong.");
+      data = await response.json();
+    } catch {
+      data = { message: "Invalid JSON response from server." };
     }
-  };
+
+    // --- STATUS HANDLING ---
+    if (!response.ok) {
+      const errorMsg = data?.message || "An error occurred.";
+
+      switch (response.status) {
+        case 400:
+          alert("Bad Request: " + errorMsg);
+          break;
+        case 401:
+          alert("Unauthorized: " + errorMsg);
+          break;
+        case 409:
+          alert("User already exists: " + errorMsg);
+          break;
+        case 500:
+        default:
+          alert("Server Error: " + errorMsg);
+          break;
+      }
+
+      return;
+    }
+
+    // --- SUCCESS ---
+    alert("Signup successful!");
+    console.log(data);
+
+  } catch (error) {
+    // --- NETWORK-LEVEL ERROR ---
+    console.error("Network error:", error);
+    alert("Cannot connect to server. Please try again later.");
+  }
+};
 
   return (
     <div className="main-center">
@@ -51,9 +85,9 @@ const Signup = () => {
           <label className="form-label">Firstname</label>
           <input
             type="text"
-            name="fullname"
+            name="firstname"
             className="form-input"
-            value={formData.fullname}
+            value={formData.firstname}
             onChange={handleChange}
             required
           />
@@ -61,9 +95,9 @@ const Signup = () => {
           <label className="form-label">Lastname</label>
           <input
             type="text"
-            name="Lastname"
+            name="lastname"
             className="form-input"
-            value={formData.Lastname}
+            value={formData.lastname}
             onChange={handleChange}
             required
           />
@@ -82,7 +116,7 @@ const Signup = () => {
           <select
             name="Gender"
             className="form-select"
-            value={formData.Gender}
+            value={formData.gender}
             onChange={handleChange}
             required
           >
