@@ -9,80 +9,105 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Badge from "../../ui/badge/Badge";
 
-
-
+interface Goal {
+  goal_id: number;
+  user_id: number;
+  goal_type: string;
+  target_value: number;
+  current_value: number;
+  start_date: string;
+  end_date: string;
+  status: string;
+}
 
 export default function Goals() {
-  const [goals, setgoals] = useState<User[]>([]);
+  const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
-    const fetchUsers = async () => {
-      try {
-        const token = Cookies.get("token"); // 👈 cookie name "token"
 
-        const response = await fetch("http://localhost:7000/goals/all", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+  const fetchGoals = async () => {
+    try {
+      const token = Cookies.get("token");
+      const userRole = Cookies.get("userrole");
+      const userId = Cookies.get("userId");
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
-        }
-
-        const data = await response.json();
-        setgoals(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false);
+      if (!token) {
+        throw new Error("Unauthorized");
       }
-    };
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-const handleDeletegoal = async (id: number) => {
-  const token = Cookies.get("token");
 
-  if (!token) {
-    alert("Unauthorized");
-    return;
-  }
+      const url =
+        userRole === "ADMIN"
+          ? "http://localhost:7000/goals/all"
+          : `http://localhost:7000/goals/${userId}`;
 
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this user?"
-  );
-
-  if (!confirmDelete) return;
-
-  try {
-    const response = await fetch(
-      `http://localhost:7000/users/${id}`,
-      {
-        method: "DELETE",
+      const response = await fetch(url, {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to delete user");
+      if (!response.ok) {
+        throw new Error("Failed to fetch goals");
+      }
+
+      const data = await response.json();
+
+      // Non-admin usually returns one goal or an array → normalize
+      setGoals(userRole === "ADMIN" ? data : Array.isArray(data) ? data : [data]);
+    } catch (error) {
+      console.error("Error fetching goals:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGoals();
+  }, []);
+
+  const handleDeleteGoal = async (goalId: number) => {
+    const token = Cookies.get("token");
+
+    if (!token) {
+      alert("Unauthorized");
+      return;
     }
 
-  
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this goal?"
+    );
 
-  } catch (error) {
-    console.error("Delete error:", error);
-    alert("Failed to delete user");
-  }
-};
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:7000/goals/${goalId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete goal");
+      }
+
+      // Remove from UI
+      setGoals((prev) => prev.filter((g) => g.goal_id !== goalId));
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete goal");
+    }
+  };
+
   if (loading) {
     return <div className="p-5">Loading...</div>;
   }
-
+  console.log(goals)
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">

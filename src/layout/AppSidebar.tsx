@@ -29,13 +29,13 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Ecommerce", path: "/", pro: false }],
+    subItems: [{ name: "Fitness", path: "/", pro: false }],
   },
-  {
-    icon: <CalenderIcon />,
-    name: "Calendar",
-    path: "/calendar",
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   name: "Calendar",
+  //   path: "/calendar",
+  // },
   {
     icon: <UserCircleIcon />,
     name: "User Profile",
@@ -44,7 +44,7 @@ const navItems: NavItem[] = [
   {
     name: "Forms",
     icon: <ListIcon />,
-    subItems: [{ name: "Form Elements", path: "/form-elements", pro: false }],
+    subItems: [{ name: "Fitness Elements", path: "/form-elements", pro: false }],
   },
   {
     name: "Tables",
@@ -55,37 +55,45 @@ const navItems: NavItem[] = [
    { name: "Goal tables", path: "/goal-tables", pro: false },
   { name: "food tables", path: "/food-tables", pro: false }],
   },
-  {
-    name: "Pages",
-    icon: <PageIcon />,
+    {
+    name: "Workouts",
+     icon: <TableIcon />,
     subItems: [
-      { name: "Blank Page", path: "/blank", pro: false },
-      { name: "404 Error", path: "/error-404", pro: false },
+      { name: "Add workouts", path: "/addworkouts", pro: false },
+      { name: "Track workoots", path: "/trackworkouts", pro: false },
     ],
   },
+  // {
+  //   name: "Pages",
+  //   icon: <PageIcon />,
+  //   subItems: [
+  //     { name: "Blank Page", path: "/blank", pro: false },
+  //     { name: "404 Error", path: "/error-404", pro: false },
+  //   ],
+  // },
 ];
 
 const othersItems: NavItem[] = [
-  {
-    icon: <PieChartIcon />,
-    name: "Charts",
-    subItems: [
-      { name: "Line Chart", path: "/line-chart", pro: false },
-      { name: "Bar Chart", path: "/bar-chart", pro: false },
-    ],
-  },
-  {
-    icon: <BoxCubeIcon />,
-    name: "UI Elements",
-    subItems: [
-      { name: "Alerts", path: "/alerts", pro: false },
-      { name: "Avatar", path: "/avatars", pro: false },
-      { name: "Badge", path: "/badge", pro: false },
-      { name: "Buttons", path: "/buttons", pro: false },
-      { name: "Images", path: "/images", pro: false },
-      { name: "Videos", path: "/videos", pro: false },
-    ],
-  },
+  // {
+  //   icon: <PieChartIcon />,
+  //   name: "Charts",
+  //   subItems: [
+  //     { name: "Line Chart", path: "/line-chart", pro: false },
+  //     { name: "Bar Chart", path: "/bar-chart", pro: false },
+  //   ],
+  // },
+  // {
+  //   icon: <BoxCubeIcon />,
+  //   name: "Chats",
+  //   subItems: [
+  //     { name: "Chats", path: "/alerts", pro: false },
+  //     // { name: "Avatar", path: "/avatars", pro: false },
+  //     // { name: "Badge", path: "/badge", pro: false },
+  //     // { name: "Buttons", path: "/buttons", pro: false },
+  //     // { name: "Images", path: "/images", pro: false },
+  //     // { name: "Videos", path: "/videos", pro: false },
+  //   ],
+  // },
   {
     icon: <PlugInIcon />,
     name: "Authentication",

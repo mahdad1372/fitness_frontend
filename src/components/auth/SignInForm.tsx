@@ -53,6 +53,7 @@ export default function SignInForm() {
         expires: 1,
         sameSite: "strict",
       });
+      Cookies.set("userrole", data.user.role);
       console.log("Login success:", data);
 
       // ✅ Redirect

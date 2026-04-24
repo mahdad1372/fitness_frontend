@@ -10,12 +10,14 @@ export default function DefaultInputs() {
 
   const [formData, setFormData] = useState({
     user_id: 0,
-    type: "",
-    duration: 0,
-    calories_burned: 0,
-    rest_seconds: 0,
-    rpe: 0,
-    intensity_percent: 0,
+    food_name: "",
+    category: "",
+    calories: 0,
+    protein: 0,
+    carbohydrates: 0,
+    fats: 0,
+    meal_time: 0,
+    notes: "",
   });
 
   // Get userId from cookie
@@ -51,7 +53,7 @@ export default function DefaultInputs() {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:7000/worksout/addworksout", {
+      const response = await fetch("http://localhost:7000/foods/addfoods", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,18 +62,20 @@ export default function DefaultInputs() {
       });
 
       if (response.ok) {
-        alert("Workout added successfully!");
+        alert("foods added successfully!");
         setFormData(prev => ({
           ...prev,
-          type: "",
-          duration: 0,
-          calories_burned: 0,
-          rest_seconds: 0,
-          rpe: 0,
-          intensity_percent: 0,
+            food_name: "",
+            category: "",
+            calories: 0,
+            protein: 0,
+            carbohydrates: 0,
+            fats: 0,
+            meal_time: 0,
+            notes:""
         }));
       } else {
-        alert("Error adding workout.");
+        alert("Error adding foods.");
       }
     } catch (error) {
       console.error("Connection error:", error);
@@ -81,48 +85,26 @@ export default function DefaultInputs() {
   if (loading) return null;
 
   return (
-    <ComponentCard title="Workouts">
+    <ComponentCard title="Foods">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="type">Workout Type</Label>
+            <Label htmlFor="food_name">food name</Label>
             <Input
               type="text"
-              name="type"
-              value={formData.type}
+              name="food_name"
+              value={formData.food_name}
               onChange={handleChange}
-              placeholder="e.g. Cardio"
+              placeholder="food_name"
             />
           </div>
 
           <div>
-            <Label htmlFor="duration">Duration (mins)</Label>
+            <Label htmlFor="category">category</Label>
             <Input
-              type="number"
-              name="duration"
-              value={formData.duration}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="calories_burned">Calories Burned</Label>
-            <Input
-              type="number"
-              name="calories_burned"
-              value={formData.calories_burned}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="rest_seconds">Rest (seconds)</Label>
-            <Input
-              type="number"
-              name="rest_seconds"
-              value={formData.rest_seconds}
+              type="text"
+              name="category"
+              value={formData.category}
               onChange={handleChange}
             />
           </div>
@@ -130,22 +112,64 @@ export default function DefaultInputs() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="rpe">RPE </Label>
+            <Label htmlFor="calories">calories</Label>
             <Input
               type="number"
-              name="rpe"
-              value={formData.rpe}
+              name="calories"
+              value={formData.calories}
               onChange={handleChange}
             />
           </div>
 
           <div>
-            <Label htmlFor="intensity_percent">Intensity (%)</Label>
+            <Label htmlFor="protein">protein</Label>
             <Input
               type="number"
-              name="intensity_percent"
-              value={formData.intensity_percent}
+              name="protein"
+              value={formData.protein}
               onChange={handleChange}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label htmlFor="carbohydrates">carbohydrates </Label>
+            <Input
+              type="number"
+              name="carbohydrates"
+              value={formData.carbohydrates}
+              onChange={handleChange}
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="fats">fats</Label>
+            <Input
+              type="number"
+              name="fats"
+              value={formData.fats}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <Label htmlFor="meal_time">meal_time</Label>
+            <Input
+              type="text"
+              name="meal_time"
+              value={formData.meal_time}
+              onChange={handleChange}
+              placeholder="meal_time"
+            />
+          </div>
+        <div>
+            <Label htmlFor="notes">notes</Label>
+            <Input
+              type="text"
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              placeholder="notes"
             />
           </div>
         </div>
@@ -155,7 +179,7 @@ export default function DefaultInputs() {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
           >
-            Save Workout
+            Save Foods
           </button>
         </div>
       </form>

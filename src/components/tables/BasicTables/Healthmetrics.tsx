@@ -10,81 +10,102 @@ import Cookies from "js-cookie";
 import Badge from "../../ui/badge/Badge";
 
 
+interface HealthMetric {
+  id: number;
+  user_id: number;
+  cholesterol: number;
+  blood_pressure: string;
+  heart_rate: number;
+}
 
 
 export default function Healthmetrics() {
-  const [health, setHealth] = useState<User[]>([]);
+  const [health, setHealth] = useState<HealthMetric[]>([]);
   const [loading, setLoading] = useState(true);
-    const fetchUsers = async () => {
-      try {
-        const token = Cookies.get("token"); // 👈 cookie name "token"
 
-        const response = await fetch("http://localhost:7000/health_metric/all", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+  const fetchHealthMetrics = async () => {
+    try {
+      const token = Cookies.get("token");
+      const userRole = Cookies.get("userrole");
+      const userId = Cookies.get("userId");
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch users");
-        }
-
-        const data = await response.json();
-        setHealth(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false);
+      if (!token) {
+        throw new Error("Unauthorized");
       }
-    };
-  useEffect(() => {
-    fetchUsers();
-  }, []);
-  console.log(health)
-const handleDeleteUser = async (id: number) => {
-  const token = Cookies.get("token");
 
-  if (!token) {
-    alert("Unauthorized");
-    return;
-  }
+      const url =
+        userRole === "ADMIN"
+          ? "http://localhost:7000/health_metric/all"
+          : `http://localhost:7000/health_metric/${userId}`;
 
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this user?"
-  );
-
-  if (!confirmDelete) return;
-
-  try {
-    const response = await fetch(
-      `http://localhost:7000/users/${id}`,
-      {
-        method: "DELETE",
+      const response = await fetch(url, {
+        method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-      }
-    );
+      });
 
-    if (!response.ok) {
-      throw new Error("Failed to delete user");
+      if (!response.ok) {
+        throw new Error("Failed to fetch health metrics");
+      }
+
+      const data = await response.json();
+      console.log(data)
+      // Non-admin usually gets a single object → normalize to array
+      setHealth(data);
+    } catch (error) {
+      console.error("Error fetching health metrics:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHealthMetrics();
+  }, []);
+
+  const handleDeleteMetric = async (id: number) => {
+    const token = Cookies.get("token");
+
+    if (!token) {
+      alert("Unauthorized");
+      return;
     }
 
-    // Remove user from UI immediately
-    setUsers((prev) => prev.filter((user) => user.id !== id));
-    fetchUsers();
-  } catch (error) {
-    console.error("Delete error:", error);
-    alert("Failed to delete user");
-  }
-};
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this health record?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(
+        `http://localhost:7000/health_metric/${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete health metric");
+      }
+
+      setHealth((prev) => prev.filter((item) => item.id !== id));
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Failed to delete health metric");
+    }
+  };
+
   if (loading) {
     return <div className="p-5">Loading...</div>;
   }
-
+console.log(health[0])
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">

@@ -22,17 +22,22 @@ import Worksouttable from "./pages/Tables/WorkoutsTables";
 import HealthmetricsTabls from "./pages/Tables/HealthmetrixTables";
 import GoalTables from "./pages/Tables/GoalTables";
 import FoodTables from "./pages/Tables/FoodTables";
-
+import Formworkouts from "../src/pages/Forms/Formworkouts";
+import Trackworkouts from "./components/tables/BasicTables/Trackworkouts";
+import { WorkoutProvider } from "./context/WorkoutContext";
 export default function App() {
   return (
     <>
       <Router>
+          <WorkoutProvider>
         <ScrollToTop />
         <Routes>
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
+        
             <Route index path="/" element={<Home />} />
-
+            {/* <Route index path="/chats" element={<ChatApp />} />
+            <Route index path="/chats/student" element={<ChatStudent />} /> */}
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
@@ -50,11 +55,16 @@ export default function App() {
          
             {/* Ui Elements */}
             <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
+
+            <Route path="/addworkouts" element={<Formworkouts/>} />
+            <Route path="/trackworkouts" element={<Trackworkouts/>} />
+   
+
+            {/* <Route path="/avatars" element={<Avatars />} />
             <Route path="/badge" element={<Badges />} />
             <Route path="/buttons" element={<Buttons />} />
             <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
+            <Route path="/videos" element={<Videos />} /> */}
 
             {/* Charts */}
             <Route path="/line-chart" element={<LineChart />} />
@@ -68,6 +78,7 @@ export default function App() {
           {/* Fallback Route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </WorkoutProvider>
       </Router>
     </>
   );

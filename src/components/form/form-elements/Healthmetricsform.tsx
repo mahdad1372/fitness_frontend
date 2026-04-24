@@ -1,21 +1,20 @@
-import { useState, useEffect } from "react";
-import ComponentCard from "../../common/ComponentCard";
-import Label from "../Label";
-import Input from "../input/InputField";
+import { useState,useEffect } from "react";
+import ComponentCard from "../../common/ComponentCard.tsx";
+import Label from "../Label.tsx";
+import Input from "../input/InputField.tsx";
+import Select from "../Select.tsx";
+import { EyeCloseIcon, EyeIcon, TimeIcon } from "../../../icons/index.ts";
+import DatePicker from "../date-picker.tsx";
 import Cookies from "js-cookie";
-
-export default function DefaultInputs() {
+export default function Healthmetricsform() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     user_id: 0,
-    type: "",
-    duration: 0,
-    calories_burned: 0,
-    rest_seconds: 0,
-    rpe: 0,
-    intensity_percent: 0,
+    cholesterol: 0,
+    blood_pressure: 0,
+    heart_rate: 0,
   });
 
   // Get userId from cookie
@@ -47,11 +46,12 @@ export default function DefaultInputs() {
     }));
   };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:7000/worksout/addworksout", {
+      const response = await fetch("http://localhost:7000/health_metric/addmetrics", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,12 +63,9 @@ export default function DefaultInputs() {
         alert("Workout added successfully!");
         setFormData(prev => ({
           ...prev,
-          type: "",
-          duration: 0,
-          calories_burned: 0,
-          rest_seconds: 0,
-          rpe: 0,
-          intensity_percent: 0,
+         cholesterol: 0,
+        blood_pressure: 0,
+        heart_rate: 0,
         }));
       } else {
         alert("Error adding workout.");
@@ -81,26 +78,27 @@ export default function DefaultInputs() {
   if (loading) return null;
 
   return (
-    <ComponentCard title="Workouts">
+    <ComponentCard title="Health metrics">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="type">Workout Type</Label>
-            <Input
-              type="text"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
-              placeholder="e.g. Cardio"
-            />
+            <Label htmlFor="cholesterol">Cholesterol</Label>
+          <Input
+           type="number"
+          name="cholesterol"
+          value={formData.cholesterol}
+          onChange={handleChange}
+          placeholder="e.g. 200"
+          />
+          
           </div>
 
           <div>
-            <Label htmlFor="duration">Duration (mins)</Label>
+            <Label htmlFor="blood_pressure">blood_pressure</Label>
             <Input
               type="number"
-              name="duration"
-              value={formData.duration}
+              name="blood_pressure"
+              value={formData.blood_pressure}
               onChange={handleChange}
             />
           </div>
@@ -108,54 +106,21 @@ export default function DefaultInputs() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="calories_burned">Calories Burned</Label>
+            <Label htmlFor="heart_rate">heart_rate</Label>
             <Input
               type="number"
-              name="calories_burned"
-              value={formData.calories_burned}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="rest_seconds">Rest (seconds)</Label>
-            <Input
-              type="number"
-              name="rest_seconds"
-              value={formData.rest_seconds}
+              name="heart_rate"
+              value={formData.heart_rate}
               onChange={handleChange}
             />
           </div>
         </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="rpe">RPE </Label>
-            <Input
-              type="number"
-              name="rpe"
-              value={formData.rpe}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="intensity_percent">Intensity (%)</Label>
-            <Input
-              type="number"
-              name="intensity_percent"
-              value={formData.intensity_percent}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
-
         <div className="pt-4">
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
           >
-            Save Workout
+            Save Health metrics
           </button>
         </div>
       </form>

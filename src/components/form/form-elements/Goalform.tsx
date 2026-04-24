@@ -3,19 +3,19 @@ import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 import Input from "../input/InputField";
 import Cookies from "js-cookie";
-
+import DatePicker from "../date-picker.tsx";
 export default function DefaultInputs() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
 
   const [formData, setFormData] = useState({
     user_id: 0,
-    type: "",
-    duration: 0,
-    calories_burned: 0,
-    rest_seconds: 0,
-    rpe: 0,
-    intensity_percent: 0,
+    goal_type: "",
+    target_value: 0,
+    current_value: 0,
+    start_date:"",
+    end_date:"",
+    status: "",
   });
 
   // Get userId from cookie
@@ -46,12 +46,35 @@ export default function DefaultInputs() {
       [name]: type === "number" ? Number(value) : value,
     }));
   };
+const handleDateChange = (id: string, date: Date | Date[] | string | null) => {
+  if (!date) return;
+
+  let finalDate: string;
+
+  if (Array.isArray(date)) {
+    // Take the first date if array
+    const d = date[0];
+    finalDate = d.toISOString().split("T")[0];
+  } else if (date instanceof Date) {
+    finalDate = date.toISOString().split("T")[0];
+  } else if (typeof date === "string") {
+    finalDate = date; // already string
+  } else {
+    console.error("Invalid date value:", date);
+    return;
+  }
+
+  setFormData(prev => ({
+    ...prev,
+    [id]: finalDate,
+  }));
+};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:7000/worksout/addworksout", {
+      const response = await fetch("http://localhost:7000/goals/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,18 +83,18 @@ export default function DefaultInputs() {
       });
 
       if (response.ok) {
-        alert("Workout added successfully!");
+        alert("Goal added successfully!");
         setFormData(prev => ({
           ...prev,
-          type: "",
-          duration: 0,
-          calories_burned: 0,
-          rest_seconds: 0,
-          rpe: 0,
-          intensity_percent: 0,
+        goal_type: "",
+    target_value: 0,
+    current_value: 0,
+    start_date:"",
+    end_date:"",
+    status: "",
         }));
       } else {
-        alert("Error adding workout.");
+        alert("Error adding foods.");
       }
     } catch (error) {
       console.error("Connection error:", error);
@@ -79,83 +102,77 @@ export default function DefaultInputs() {
   };
 
   if (loading) return null;
-
+console.log(formData.start_date)
   return (
-    <ComponentCard title="Workouts">
+    <ComponentCard title="Goal">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="type">Workout Type</Label>
+            <Label htmlFor="goal_type">goal_type</Label>
             <Input
               type="text"
-              name="type"
-              value={formData.type}
+              name="goal_type"
+              value={formData.goal_type}
               onChange={handleChange}
-              placeholder="e.g. Cardio"
+              placeholder="goal_type"
             />
           </div>
-
           <div>
-            <Label htmlFor="duration">Duration (mins)</Label>
+            <Label htmlFor="current_value">current_value</Label>
             <Input
-              type="number"
-              name="duration"
-              value={formData.duration}
+              type="text"
+              name="current_value"
+              value={formData.current_value}
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <Label htmlFor="target_value">target_value</Label>
+            <Input
+              type="text"
+              name="target_value"
+              value={formData.target_value}
               onChange={handleChange}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="calories_burned">Calories Burned</Label>
-            <Input
-              type="number"
-              name="calories_burned"
-              value={formData.calories_burned}
-              onChange={handleChange}
-            />
-          </div>
+<DatePicker
+  id="start_date"
+  label="start_date"
+  placeholder="start_date"
+  
+  onChange={(date) =>
+    handleDateChange("start_date", date)
+  }
+/>
 
+<DatePicker
+  id="end_date"
+  label="end_date"
+  placeholder="end_date"
+  onChange={(date) =>
+    handleDateChange("end_date", date)
+  }
+/>
           <div>
-            <Label htmlFor="rest_seconds">Rest (seconds)</Label>
+            <Label htmlFor="status">Status</Label>
             <Input
-              type="number"
-              name="rest_seconds"
-              value={formData.rest_seconds}
+              type="text"
+              name="status"
+              value={formData.status}
               onChange={handleChange}
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <Label htmlFor="rpe">RPE </Label>
-            <Input
-              type="number"
-              name="rpe"
-              value={formData.rpe}
-              onChange={handleChange}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="intensity_percent">Intensity (%)</Label>
-            <Input
-              type="number"
-              name="intensity_percent"
-              value={formData.intensity_percent}
-              onChange={handleChange}
+              placeholder="status"
             />
           </div>
         </div>
-
         <div className="pt-4">
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
           >
-            Save Workout
+            Save Goal
           </button>
         </div>
       </form>
