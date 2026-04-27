@@ -25,6 +25,9 @@ import FoodTables from "./pages/Tables/FoodTables";
 import Formworkouts from "../src/pages/Forms/Formworkouts";
 import Trackworkouts from "./components/tables/BasicTables/Trackworkouts";
 import { WorkoutProvider } from "./context/WorkoutContext";
+import Formdiet from "./pages/Forms/FormDiet";
+import FormMealConsume from "./pages/Forms/FormMealConsume";
+import Formweight from "../src/pages/Forms/Formweight";
 export default function App() {
   return (
     <>
@@ -58,7 +61,9 @@ export default function App() {
 
             <Route path="/addworkouts" element={<Formworkouts/>} />
             <Route path="/trackworkouts" element={<Trackworkouts/>} />
-   
+            <Route path="/adddiet" element={<Formdiet/>} />
+            <Route path="/consume_meal" element={<FormMealConsume/>}/>
+            <Route path="/evaluate_weight" element={<Formweight />}/>
 
             {/* <Route path="/avatars" element={<Avatars />} />
             <Route path="/badge" element={<Badges />} />

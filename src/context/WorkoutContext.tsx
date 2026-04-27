@@ -7,6 +7,12 @@ type WorkoutData = {
   rest_seconds: number;
   rpe: number;
   sets: number;
+  calories:number;
+  protein:number;
+  fats:number;
+  carbohydrates:number,
+  weight:number
+  goal_diet:string
 };
 
 type WorkoutContextType = {
@@ -21,10 +27,17 @@ export const WorkoutProvider = ({ children }: { children: React.ReactNode }) => 
   const [formData, setFormData] = useState<WorkoutData>({
     user_id: 0,
     type: [],
+   
     exercises: [],
     rest_seconds: 0,
     rpe: 0,
     sets: 0,
+    calories:0,
+    protein:0,
+    fats:0,
+    carbohydrates:0,
+    weight:0,
+     goal_diet:"",
   });
 
   const startWorkout = () => {
