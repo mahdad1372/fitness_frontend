@@ -861,13 +861,7 @@ const button_navigation_click = () => {
         >
          Calculate with the adherence score and make the comparison with the diet 
         </button>
-         <button
-          type="button"
-          className="w-full bg-blue-600 text-white py-3 rounded-lg"
-       
-        >
-          Let's go for consuming the Meal
-        </button>
+
           </div>
 
       </form>

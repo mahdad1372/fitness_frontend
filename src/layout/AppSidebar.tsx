@@ -68,15 +68,13 @@ const navItems: NavItem[] = [
     subItems: [
       { name: "Add Diet", path: "/adddiet", pro: false },
     ],
+  }, {
+    name: "Gym scheduale",
+     icon: <TableIcon />,
+    subItems: [
+      { name: "Add Gym Scheduale", path: "/addgymscheduale", pro: false },
+    ],
   }
-  // {
-  //   name: "Pages",
-  //   icon: <PageIcon />,
-  //   subItems: [
-  //     { name: "Blank Page", path: "/blank", pro: false },
-  //     { name: "404 Error", path: "/error-404", pro: false },
-  //   ],
-  // },
 ];
 
 const othersItems: NavItem[] = [

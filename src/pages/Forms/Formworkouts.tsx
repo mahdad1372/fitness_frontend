@@ -83,6 +83,7 @@ export default function Formworkouts() {
       <form onSubmit={handleSubmit} className="space-y-6">
 
         {/* Workout Type */}
+        <div className="relative z-52">
         <MultiSelect
           label="Select workout type"
           options={multiOptions}
@@ -90,6 +91,7 @@ export default function Formworkouts() {
             setFormData(prev => ({ ...prev, type: values }))
           }
         />
+        </div>
 
         {/* Exercises */}
         <MultiSelect

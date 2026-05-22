@@ -50,6 +50,7 @@ export default function Formdiet() {
       setFormData(prev => ({ ...prev, user_id: userId }));
     }
   }, [userId]);
+  
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
@@ -112,6 +113,7 @@ export default function Formdiet() {
     setFormData(prev => ({ ...prev, goal_diet:info.goaldiet}))
     openModal();
   }
+  
 
 
   return (

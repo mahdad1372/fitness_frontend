@@ -53,9 +53,23 @@ let interval: ReturnType<typeof setInterval>;
 
 }, [isRunning]);
 useEffect(() => {
-  if (seconds > formData.rest_seconds && formData.rest_seconds > 0) {
+  if (!isRunning) return;
+
+  const interval = setInterval(() => {
+    setSeconds((prev) => prev + 1);
+  }, 1000);
+
+  return () => clearInterval(interval);
+}, [isRunning]);
+
+useEffect(() => {
+  if (
+    typeof formData.rest_seconds === "number" &&
+    formData.rest_seconds > 0 &&
+    seconds >= formData.rest_seconds
+  ) {
     setmsg("⚠️ Your rest time has finished!");
-    setIsRunning(false); // optional: stop timer
+    setIsRunning(false);
     openModal();
   }
 }, [seconds, formData.rest_seconds]);
