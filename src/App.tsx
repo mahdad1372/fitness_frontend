@@ -29,6 +29,7 @@ import Formdiet from "./pages/Forms/FormDiet";
 import FormMealConsume from "./pages/Forms/FormMealConsume";
 import Formweight from "../src/pages/Forms/Formweight";
 import FormGym from "../src/pages/Forms/FormGym";
+import ForTrainingGym from "./pages/Forms/FormTrainingGym";
 export default function App() {
   return (
     <>
@@ -66,13 +67,7 @@ export default function App() {
             <Route path="/consume_meal" element={<FormMealConsume/>}/>
             <Route path="/evaluate_weight" element={<Formweight />}/>
             <Route path="/addgymscheduale" element={<FormGym/>}/>
-            {/* <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} /> */}
-
-            {/* Charts */}
+            <Route path="/traininggym" element={<ForTrainingGym/>}/>
             <Route path="/line-chart" element={<LineChart />} />
             <Route path="/bar-chart" element={<BarChart />} />
           </Route>

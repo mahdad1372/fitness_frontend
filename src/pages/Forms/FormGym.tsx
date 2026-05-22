@@ -380,6 +380,18 @@ export default function FormGym() {
                   After the evaluation your body should follow {finalgoal} patterns
                   </p>
                 </div>
+                <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-3 rounded-lg"
+                onClick={()=>{
+                  setFormData(prev => ({
+                  ...prev,
+                  goal_diet: finalgoal,}));
+                  navigate("/traininggym")
+                }}
+                >
+                Let's go fir the weekly scheduale base on the Aim
+              </button>
               </div>
             </Modal>
     </ComponentCard>

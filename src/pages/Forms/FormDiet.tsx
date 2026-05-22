@@ -12,7 +12,7 @@ import { useModal } from "../../hooks/useModal";
 export default function Formdiet() {
   const { formData, setFormData, startWorkout } = useWorkout();
   const [loading, setLoading] = useState(true);
-    const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
   const [userId, setUserId] = useState<number | null>(null);
   const navigate = useNavigate();
   const [info, setinfo] = useState({
