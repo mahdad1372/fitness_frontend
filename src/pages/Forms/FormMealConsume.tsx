@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import ComponentCard from "../../components/common/ComponentCard";
-import Label from "../../components/form/Label";
-import Input from "../../components/form/input/InputField";
 import MultiSelect from "../../components/form/MultiSelect";
 import Cookies from "js-cookie";
 import { useWorkout } from "../../context/WorkoutContext";
@@ -648,8 +646,8 @@ const button_navigation_click = () => {
           updatedinneritem(1, "calories", totals.calories);
           }}
         />
-          </div>
-                    <div className="relative z-50">
+        </div>
+      <div className="relative z-50">
         <MultiSelect
           label="Select food contain fats"
           options={Fats}
@@ -678,7 +676,7 @@ const button_navigation_click = () => {
         />
           </div>
 
-          <div className="relative z-50">
+      <div className="relative z-50">
         <MultiSelect
            label="Select vegetables"
           options={Vegetables}
