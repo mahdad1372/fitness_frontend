@@ -12,7 +12,7 @@ import { useModal } from "../../hooks/useModal";
 export default function Formdiet() {
   const { formData, setFormData, startWorkout } = useWorkout();
   const [loading, setLoading] = useState(true);
-    const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, openModal, closeModal } = useModal();
   const [userId, setUserId] = useState<number | null>(null);
   const navigate = useNavigate();
   const [info, setinfo] = useState({
@@ -21,29 +21,27 @@ export default function Formdiet() {
     height: 0,
     weight: 0,
     goaldiet:"",
+    header:"",
+    deadlift:0,
+    muscle_size:0
   });
   const [status, setstatus] = useState("");
-  const [calories,setcalories] = useState(0);
-  const [protein,setprotein] = useState(0);
-  const [fat,setfat] = useState(0);
-  const [carbs,setcarbs] = useState(0);
-  const Genderoptions = [
-    { value: "Male", text: "Male" },
-    { value: "Female", text: "Female" },
-  ];
-
-  const exercisesOptions = [
-    { value: "Gain weight", text: "Gain weight" },
-    { value: "Loss weight", text: "Loss weight" },
-    { value: "Maintain weight", text: "Maintain weight" },
-
-  ];
-
 
   useEffect(() => {
     const id = Cookies.get("userId");
     if (id) setUserId(Number(id));
     setLoading(false);
+    if(formData.goal_diet === "FAT_LOSS"){
+      setinfo(prev => ({...prev, header: "Weight Evaluation"}));
+    }else if(formData.goal_diet === "MUSCLE_GAIN"){
+        setinfo(prev => ({...prev, header: "Muscle Evaluation"}));
+    }else if(formData.goal_diet === "MAINTENANCE"){
+        setinfo(prev => ({...prev, header: "Weight Evaluation"}));
+    }else if(formData.goal_diet === "BODY_RECOMPOSITION"){
+        setinfo(prev => ({...prev, header: "Muscle , Weight Evaluation"}));
+    }else {
+      setinfo(prev => ({...prev, header: "Performance Evaluation"}));
+    }
   }, []);
 
   useEffect(() => {
@@ -119,11 +117,45 @@ export default function Formdiet() {
     }
     openModal();
   }
-console.log(formData.weight)
+
   return (
-    <ComponentCard title="Weight evaluation">
+    <ComponentCard title={info.header}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-4 gap-6">
+          {formData.goal_diet === "PERFORMANCE_ENHANCEMENT" && (
+          <div>
+          <Label>Deadlift number</Label>
+          <Input
+          type="number"
+          name="deadlift"
+          value={info.deadlift}
+          onChange={handleChange}
+          />
+          </div>
+          )}
+        {formData.goal_diet === "MUSCLE_GAIN" && (
+          <div>
+          <Label>Muscle size</Label>
+          <Input
+          type="number"
+          name="muscle_size"
+          value={info.muscle_size}
+          onChange={handleChange}
+          />
+          </div>
+          )}
+          {formData.goal_diet === "BODY_RECOMPOSITION" && (
+          <div>
+          <Label>Muscle measure</Label>
+          <Input
+          type="number"
+          name="muscle_size"
+          value={info.muscle_size}
+          onChange={handleChange}
+          />
+          </div>
+          )}
+          {formData.goal_diet === "BODY_RECOMPOSITION" && (
           <div>
             <Label>Weight</Label>
             <Input
@@ -133,6 +165,40 @@ console.log(formData.weight)
               onChange={handleChange}
             />
           </div>
+           )}
+        {formData.goal_diet === "FAT_LOSS" && (
+          <div>
+            <Label>Weight</Label>
+            <Input
+              type="number"
+              name="weight" 
+              value={info.weight}
+              onChange={handleChange}
+            />
+          </div>
+           )}
+        {formData.goal_diet === "MAINTENANCE" && (
+          <div>
+            <Label>Weight</Label>
+            <Input
+              type="number"
+              name="weight" 
+              value={info.weight}
+              onChange={handleChange}
+            />
+          </div>
+           )}
+          {formData.goal_diet === "PERFORMANCE_ENHANCEMENT" && (
+          <div>
+            <Label>Deadlift</Label>
+            <Input
+              type="number"
+              name="deadlift" 
+              value={info.deadlift}
+              onChange={handleChange}
+            />
+          </div>
+           )}
         </div>
         {/* Submit */}
         <div className="grid grid-cols-4 gap-6">

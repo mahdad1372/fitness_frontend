@@ -2,177 +2,79 @@ import { useEffect, useState } from "react";
 import ComponentCard from "../../components/common/ComponentCard";
 import MultiSelect from "../../components/form/MultiSelect";
 import Cookies from "js-cookie";
+import Label from "../../components/form/Label";
+import Input from "../../components/form/input/InputField";
 import { useWorkout } from "../../context/WorkoutContext";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "../../components/ui/modal";
 import { useModal } from "../../hooks/useModal";
+import food from "../../food.json";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHeader,
+  TableRow,
+} from "../../components/ui/table";
 export default function FormMealConsume() {
   const { formData, setFormData, startWorkout } = useWorkout();
   const [loading, setLoading] = useState(true);
   const { isOpen, openModal, closeModal } = useModal();
   const [userId, setUserId] = useState<number | null>(null);
   const [evaluation,setevaluation] = useState("");
-  const [buttontxt,setbuttontxt] = useState("");
+  const [buttontxt,setbuttontxt] = useState("Click here to know your final evaluation");
   const navigate = useNavigate();
-const [breakfast, setBreakfast] = useState([
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-    {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  }
-]);
-const [lunch, setlunch] = useState([
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-    {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  }
-]);
-const [dinner, setdinner] = useState([
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-    {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  }
-]);
-const [Snack, setsnack] = useState([
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-    {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  },
-  {
-    Carbohydrate: 0,
-    Protein: 0,
-    Fats: 0,
-    calories: 0,
-  }
-]);
-  const [calories,setcalories] = useState(0);
-  const [protein,setprotein] = useState(0);
-  const [fat,setfat] = useState(0);
-  const [carbs,setcarbs] = useState(0);
-  const ProteinSources = [
-    { value: "Chicken", text: "Chicken" },
-    { value: "Fish", text: "Fish" },
-    { value: "Eggs", text: "Eggs" },
-    { value: "Beef", text: "Beef" },
-    { value: "Beans", text: "Beans" },
-    { value: "Yogurt", text: "Yogurt" },
-  ];
+  type FoodItem = {
+  name: string;
+  gram: number;
+};
+  type ProteinItem = {
+  name: string;
+  gram: number;
+};
+  type FruitItem = {
+  name: string;
+  gram: number;
+};
 
-  const Grain = [
-    { value: "Rice", text: "Rice" },
-    { value: "Bread", text: "Bread" },
-    { value: "Pasta", text: "Pasta" },
-    { value: "Oats", text: "Oats" },
-    { value: "Potatoes", text: "Potatoes" },
-  ];
-    const Fats = [
-    { value: "Nuts", text: "Nuts" },
-    { value: "Olive oil", text: "Olive oil" },
-    { value: "Butter", text: "Butter" },
-  ];
-    const Vegetables = [
-    { value: "Broccoli", text: "Broccoli" },
-    { value: "Carrots", text: "Carrots" },
-    { value: "Spinach", text: "Spinach" },
-    { value: "Salad", text: "Salad" },
-    { value: "Avocado", text: "Avocado" },
-  ];
+  type vegetablesItem = {
+  name: string;
+  gram: number;
+};
+  const [grain,setgrain] = useState("");
+  const [graingram, setgraingram] = useState(0);
+  const [GrainList, setGrainList] = useState<FoodItem[]>([]);
+  const [protein,setprotein] = useState("");
+  const [proteingram, setproteingram] = useState(0);
+  const [ProteinList, setProteinList] = useState<ProteinItem[]>([]);
+  const [fruit,setfruit] = useState("");
+  const [fruitgram, setfruitgram] = useState(0);
+  const [fruitList, setfruitList] = useState<FruitItem[]>([]);
 
-  const foodsnutrition = [
-    {name : "Chicken",calories:165,protein:31,carbs:0,fat:3.6},
-    {name : "Beef",calories:250,protein:26,carbs:0,fat:15},
-    {name : "Fish",calories:208,protein:20,carbs:0,fat:13},
-    {name : "Eggs",calories:70,protein:6,carbs:1,fat:5},
-    {name : "Beans",calories:116,protein:9,carbs:20,fat:0.4},
-    {name : "Yogurt",calories:59,protein:10,carbs:3.6,fat:0.4},
-    { name: "Rice", calories: 130, protein: 2.7, carbs: 28, fat: 0.3 },
-  { name: "Bread", calories: 265, protein: 9, carbs: 49, fat: 3.2 },
-  { name: "Pasta", calories: 131, protein: 5, carbs: 25, fat: 1.1 },
-  { name: "Oats", calories: 389, protein: 17, carbs: 66, fat: 7 },
-  { name: "Potatoes", calories: 77, protein: 2, carbs: 17, fat: 0.1 },
-  { name: "Fruits", calories: 89, protein: 1, carbs: 23, fat: 0.3 },
-  { name: "Olive Oil", calories: 884, protein: 0, carbs: 0, fat: 100 },
-  { name: "Nuts", calories: 579, protein: 21, carbs: 22, fat: 50 },
-  { name: "Avocado", calories: 160, protein: 2, carbs: 9, fat: 15 },
-  { name: "Butter", calories: 717, protein: 0.9, carbs: 0, fat: 81 },
-  { name: "Broccoli", calories: 34, protein: 2.8, carbs: 7, fat: 0.4 },
-  { name: "Carrot", calories: 41, protein: 1, carbs: 10, fat: 0.2 },
-  { name: "Spinach", calories: 23, protein: 2.9, carbs: 3.6, fat: 0.4 },
-  { name: "Salad", calories: 15, protein: 1.4, carbs: 2.9, fat: 0.2 }
-  ]
+  const [vegetables,setvegetables] = useState("");
+  const [vegetablesgram, setvegetablesgram] = useState(0);
+  const [vegetablesList, setvegetablesList] = useState<vegetablesItem[]>([]);
+  const [finalprotein, setfinalprotein] = useState(0);
+  const [finalfat, setfinalfat] = useState(0);
+  const [finalcholestrol, setfinalcholestrol] = useState(0);
+  const [finalcharbohyrdate, setfinalcharbohyrdate] = useState(0);
+  const Grain = food.categories.Grains.map((item) => ({
+  value: item.name,
+  text: item.name
+    }));
+    const Fruits =food.categories.Fruits.map((item) => ({
+  value: item.name,
+  text: item.name
+    }));
+    const Vegetables = food.categories.Vegetables.map((item) => ({
+  value: item.name,
+  text: item.name
+    }));
+
+  const Protein = food.categories.Protein.map((item) => ({
+  value: item.name,
+  text: item.name
+    }));
   useEffect(() => {
     const id = Cookies.get("userId");
     if (id) setUserId(Number(id));
@@ -215,120 +117,84 @@ const [Snack, setsnack] = useState([
 
   if (loading) return null;
   
-    const result = foodsnutrition.filter(food => food.name === "Chicken");
-const updatefooditem = (index: number, field: string, value: number) => {
-  setBreakfast(prev => {
-    const updated = [...prev]; // copy array
-    updated[index] = {
-      ...updated[index],       // copy object
-      [field]: value           // update field
-    };
-    return updated;
-  });
-};
-const updatelunchitem = (index: number, field: string, value: number) => {
-  setlunch(prev => {
-    const updated = [...prev]; // copy array
-    updated[index] = {
-      ...updated[index],       // copy object
-      [field]: value           // update field
-    };
-    return updated;
-  });
-};
-const updatedinneritem = (index: number, field: string, value: number) => {
-  setdinner(prev => {
-    const updated = [...prev]; // copy array
-    updated[index] = {
-      ...updated[index],       // copy object
-      [field]: value           // update field
-    };
-    return updated;
-  });
-};
-const updatesnackitem = (index: number, field: string, value: number) => {
-  setsnack(prev => {
-    const updated = [...prev]; // copy array
-    updated[index] = {
-      ...updated[index],       // copy object
-      [field]: value           // update field
-    };
-    return updated;
-  });
-};
-  
+const handleAddFruit= (): void => {
+    if (!fruit || fruitgram <= 0) return;
 
-const totalProtein = breakfast.reduce(
-  (sum, item) => sum + item.Protein,
-  0
-) + lunch.reduce(
-  (sum, item) => sum + item.Protein,
-  0
-) + dinner.reduce(
-  (sum, item) => sum + item.Protein,
-  0
-)+ Snack.reduce(
-  (sum, item) => sum + item.Protein,
-  0
-);
+    const newFood = {
+      name: fruit,
+      gram: fruitgram,
+    };
 
-const totalcarbohydrate = breakfast.reduce(
-  (sum, item) => sum + item.Carbohydrate,
-  0
-) + lunch.reduce(
-  (sum, item) => sum + item.Carbohydrate,
-  0
-) + dinner.reduce(
-  (sum, item) => sum + item.Carbohydrate,
-  0
-)+ Snack.reduce(
-  (sum, item) => sum + item.Carbohydrate,
-  0
-);
-const totalfats = breakfast.reduce(
-  (sum, item) => sum + item.Fats,
-  0
-) + lunch.reduce(
-  (sum, item) => sum + item.Fats,
-  0
-) + dinner.reduce(
-  (sum, item) => sum + item.Fats,
-  0
-)+ Snack.reduce(
-  (sum, item) => sum + item.Fats,
-  0
-);
-const totalcalories = breakfast.reduce(
-  (sum, item) => sum + item.calories,
-  0
-) + lunch.reduce(
-  (sum, item) => sum + item.calories,
-  0
-) + dinner.reduce(
-  (sum, item) => sum + item.calories,
-  0
-)+ Snack.reduce(
-  (sum, item) => sum + item.calories,
-  0
-);
-const adherence_score = (num1: number,num2: number)=>{
-  let adherence = num1/num2 
-  return adherence * 100
-}
+    setfruitList([...fruitList, newFood]);
 
-const average_adherence = (num1: number,num2: number,num3:number,num4:number)=>{
-  let average = num1 + num2 + num3 + num4
-  return average/4
-}
+    // Reset Inputs
+    setfruit("");
+    setfruitgram(0);
+  };
+const handleAddProtein = (): void => {
+    if (!protein || proteingram <= 0) return;
 
+    const newFood = {
+      name: protein,
+      gram: proteingram,
+    };
+
+    setProteinList([...ProteinList, newFood]);
+
+    // Reset Inputs
+    setprotein("");
+    setproteingram(0);
+  };
+const handleAddFood = (): void => {
+    if (!grain || graingram <= 0) return;
+
+    const newFood = {
+      name: grain,
+      gram: graingram,
+    };
+    setGrainList([...GrainList, newFood]);
+    setgrain("");
+    setgraingram(0);
+  };
+  const handleAddVegetables = (): void => {
+    if (!vegetables || vegetablesgram <= 0) return;
+
+    const newFood = {
+      name: vegetables,
+      gram: vegetablesgram,
+    };
+    setvegetablesList([...vegetablesList, newFood]);
+    setvegetables("");
+    setvegetablesgram(0);
+  };
 const evaluate_score = (num1: number) => {
   if(num1 >= 90){
+      if(formData.goal_diet === "FAT_LOSS"){
+      setbuttontxt("Let's measure your current weight")
+    }else if(formData.goal_diet === "MUSCLE_GAIN"){
+      setbuttontxt("Let's measure your current muscle size")
+    }else if(formData.goal_diet === "BODY_RECOMPOSITION"){
+      setbuttontxt("Let's measure your current weight and muscle size")
+    }else if(formData.goal_diet === "PERFORMANCE_ENHANCEMENT"){
+      setbuttontxt("Let's measure your power and performance")
+    }else{
     setbuttontxt("Let's measure your current weight")
+    }
     setevaluation("Excellent, you done your diet completely");
   }
   if(num1>75 && num1<90){
+    if(formData.goal_diet === "FAT_LOSS"){
+      setbuttontxt("Let's measure your current weight")
+    }else if(formData.goal_diet === "MUSCLE_GAIN"){
+      setbuttontxt("Let's measure your current muscle size")
+    }else if(formData.goal_diet === "BODY_RECOMPOSITION"){
+      setbuttontxt("Let's measure your current weight and muscle size")
+    }else if(formData.goal_diet === "PERFORMANCE_ENHANCEMENT"){
+      setbuttontxt("Let's measure your power and performance")
+    }else{
     setbuttontxt("Let's measure your current weight")
-    setevaluation("Very good you have followed your diet");
+    }
+  setevaluation("Very good you have followed your diet");
   }
   if(num1>50 && num1<75){
     setbuttontxt("Let's go to adjeust the plan food consuming again ")
@@ -343,528 +209,412 @@ const evaluation_button = (num1: number) => {
       evaluate_score(num1);
       openModal();
 }
+const handleRemoveGrain = (index: number): void => {
+  const updatedList = GrainList.filter((_, i) => i !== index);
+  setGrainList(updatedList);
+};
+
+const handleRemoveProtein = (index: number): void => {
+  const updatedList = ProteinList.filter((_, i) => i !== index);
+  setProteinList(updatedList);
+};
+const handleRemoveFruit= (index: number): void => {
+  const updatedList = fruitList.filter((_, i) => i !== index);
+  setfruitList(updatedList);
+};
+const handleRemoveVegetables= (index: number): void => {
+  const updatedList = vegetablesList.filter((_, i) => i !== index);
+  setvegetablesList(updatedList);
+};
+const adherence_score = (num1: number,num2: number)=>{
+  let adherence = num1/num2 
+  return adherence * 100
+}
+
+const average_adherence = (num1: number,num2: number,num3:number,num4:number)=>{
+  let average = num1 + num2 + num3 + num4
+  return average/4
+}
 const button_navigation_click = () => {
-  if(evaluation == "Needs Improvement your diet" || evaluation == "Poor"){
-    closeModal();
-  }else{
-      navigate("/evaluate_weight");
+  if(evaluation == "Excellent, you done your diet completely" || evaluation == "Very good you have followed your diet"){
+   navigate("/evaluate_weight");
   }
+}
+const calculate_macros = ()=>{
+  var protein = 0
+  var fats = 0
+  var calories = 0
+  var carbohydrates = 0
+  GrainList.forEach(element => {
+    protein += food.categories.Grains.filter(item => item.name === element.name)[0].protein_g * element.gram
+    fats += food.categories.Grains.filter(item => item.name === element.name)[0].fats_g * element.gram
+    calories += food.categories.Grains.filter(item => item.name === element.name)[0].kcal * element.gram
+    carbohydrates += food.categories.Grains.filter(item => item.name === element.name)[0].carbohydrates_g * element.gram
+  });
+  fruitList.forEach(element => {
+    protein += food.categories.Fruits.filter(item => item.name === element.name)[0].protein_g * element.gram
+    fats += food.categories.Fruits.filter(item => item.name === element.name)[0].fats_g * element.gram
+    calories += food.categories.Fruits.filter(item => item.name === element.name)[0].kcal * element.gram
+    carbohydrates += food.categories.Fruits.filter(item => item.name === element.name)[0].carbohydrates_g * element.gram
+  });
+  ProteinList.forEach(element => {
+    protein += food.categories.Protein.filter(item => item.name === element.name)[0].protein_g * element.gram
+    fats += food.categories.Protein.filter(item => item.name === element.name)[0].fats_g * element.gram
+    calories += food.categories.Protein.filter(item => item.name === element.name)[0].kcal * element.gram
+    carbohydrates += food.categories.Protein.filter(item => item.name === element.name)[0].carbohydrates_g * element.gram
+  });
+  vegetablesList.forEach(element => {
+    protein += food.categories.Vegetables.filter(item => item.name === element.name)[0].protein_g * element.gram
+    fats += food.categories.Vegetables.filter(item => item.name === element.name)[0].fats_g * element.gram
+    calories += food.categories.Vegetables.filter(item => item.name === element.name)[0].kcal * element.gram
+    carbohydrates += food.categories.Vegetables.filter(item => item.name === element.name)[0].carbohydrates_g * element.gram
+  });
+  setfinalprotein(protein)
+  setfinalfat(fats)
+  setfinalcharbohyrdate(carbohydrates)
+  setfinalcholestrol(calories)
+  openModal();
 }
 
   return (
     <ComponentCard title="Meal consume">
       <form onSubmit={handleSubmit} className="space-y-6">
-        <h2>Breakfast</h2>
+        <h2>Meal</h2>
         <div className="grid grid-cols-4 gap-6" >
-          <div className="relative z-52">
+          <div className="relative z-20">
         <MultiSelect
-          label="Select food contain carbohydrate"
+          label="Select Grain"
           options={Grain}
           onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatefooditem(0, "Carbohydrate", totals.carbs);
-          updatefooditem(0, "Protein", totals.protein);
-          updatefooditem(0, "Fats", totals.fats);
-          updatefooditem(0, "calories", totals.calories);
+            setgrain(e[0])
           }}
         />
           </div>
-
-          <div className="relative z-52">
-        <MultiSelect
-           label="Select food contain Protein"
-          options={ProteinSources}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatefooditem(1, "Carbohydrate", totals.carbs);
-          updatefooditem(1, "Protein", totals.protein);
-          updatefooditem(1, "Fats", totals.fats);
-          updatefooditem(1, "calories", totals.calories);
-          }}
-        />
-          </div>
-                    <div className="relative z-52">
-        <MultiSelect
-          label="Select food contain fats"
-          options={Fats}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatefooditem(2, "Carbohydrate", totals.carbs);
-          updatefooditem(2, "Protein", totals.protein);
-          updatefooditem(2, "Fats", totals.fats);
-          updatefooditem(2, "calories", totals.calories);
-          }}
-        />
-          </div>
-
-          <div className="relative z-52">
-        <MultiSelect
-           label="Select vegetables"
-          options={Vegetables}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatefooditem(3, "Carbohydrate", totals.carbs);
-          updatefooditem(3, "Protein", totals.protein);
-          updatefooditem(3, "Fats", totals.fats);
-          updatefooditem(3, "calories", totals.calories);
-          }}
-        />
-          </div>
-        </div>
-  <h2>Lunch</h2>
-        <div className="grid grid-cols-4 gap-6">
-          <div className="relative z-51">
-        <MultiSelect
-          label="Select food contain carbohydrate"
-          options={Grain}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatelunchitem(0, "Carbohydrate", totals.carbs);
-          updatelunchitem(0, "Protein", totals.protein);
-          updatelunchitem(0, "Fats", totals.fats);
-          updatelunchitem(0, "calories", totals.calories);
-          }}
-        />
-          </div>
-
-          <div className="relative z-51">
-        <MultiSelect
-           label="Select food contain Protein"
-          options={ProteinSources}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatelunchitem(1, "Carbohydrate", totals.carbs);
-          updatelunchitem(1, "Protein", totals.protein);
-          updatelunchitem(1, "Fats", totals.fats);
-          updatelunchitem(1, "calories", totals.calories);
-          }}
-        />
-          </div>
-                    <div className="relative z-51">
-        <MultiSelect
-          label="Select food contain fats"
-          options={Fats}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatelunchitem(2, "Carbohydrate", totals.carbs);
-          updatelunchitem(2, "Protein", totals.protein);
-          updatelunchitem(2, "Fats", totals.fats);
-          updatelunchitem(2, "calories", totals.calories);
-          }}
-        />
-          </div>
-
-          <div className="relative z-51">
-        <MultiSelect
-           label="Select vegetables"
-          options={Vegetables}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatelunchitem(3, "Carbohydrate", totals.carbs);
-          updatelunchitem(3, "Protein", totals.protein);
-          updatelunchitem(3, "Fats", totals.fats);
-          updatelunchitem(3, "calories", totals.calories);
-          }}
-        />
-          </div>
-        </div>
-          <h2>Dinner</h2>
-        <div className="grid grid-cols-4 gap-6">
-          <div className="relative z-51">
-        <MultiSelect
-          label="Select food contain carbohydrate"
-          options={Grain}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatedinneritem(0, "Carbohydrate", totals.carbs);
-          updatedinneritem(0, "Protein", totals.protein);
-          updatedinneritem(0, "Fats", totals.fats);
-          updatedinneritem(0, "calories", totals.calories);
-          }}
-        />
-          </div>
-
-          <div className="relative z-49">
-        <MultiSelect
-           label="Select food contain Protein"
-          options={ProteinSources}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatedinneritem(1, "Carbohydrate", totals.carbs);
-          updatedinneritem(1, "Protein", totals.protein);
-          updatedinneritem(1, "Fats", totals.fats);
-          updatedinneritem(1, "calories", totals.calories);
-          }}
-        />
-        </div>
-      <div className="relative z-50">
-        <MultiSelect
-          label="Select food contain fats"
-          options={Fats}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatedinneritem(2, "Carbohydrate", totals.carbs);
-          updatedinneritem(2, "Protein", totals.protein);
-          updatedinneritem(2, "Fats", totals.fats);
-          updatedinneritem(2, "calories", totals.calories);
-          }}
-        />
-          </div>
-
-      <div className="relative z-50">
-        <MultiSelect
-           label="Select vegetables"
-          options={Vegetables}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatedinneritem(3, "Carbohydrate", totals.carbs);
-          updatedinneritem(3, "Protein", totals.protein);
-          updatedinneritem(3, "Fats", totals.fats);
-          updatedinneritem(3, "calories", totals.calories);
-          }}
-        />
-          </div>
-        </div>
-          <h2>Snack</h2>
-        <div className="grid grid-cols-4 gap-6">
-          <div className="relative z-50">
-        <MultiSelect
-          label="Select food contain carbohydrate"
-          options={Grain}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatesnackitem(0, "Carbohydrate", totals.carbs);
-          updatesnackitem(0, "Protein", totals.protein);
-          updatesnackitem(0, "Fats", totals.fats);
-          updatesnackitem(0, "calories", totals.calories);
-          }}
-        />
-          </div>
-
-          <div className="relative z-50">
-        <MultiSelect
-           label="Select food contain Protein"
-          options={ProteinSources}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatesnackitem(1, "Carbohydrate", totals.carbs);
-          updatesnackitem(1, "Protein", totals.protein);
-          updatesnackitem(1, "Fats", totals.fats);
-          updatesnackitem(1, "calories", totals.calories);
-          }}
-        />
-          </div>
-                    <div className="relative z-50">
-        <MultiSelect
-          label="Select food contain fats"
-          options={Fats}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatesnackitem(2, "Carbohydrate", totals.carbs);
-          updatesnackitem(2, "Protein", totals.protein);
-          updatesnackitem(2, "Fats", totals.fats);
-          updatesnackitem(2, "calories", totals.calories);
-          }}
-        />
-          </div>
-
-          <div className="relative z-50">
-        <MultiSelect
-           label="Select vegetables"
-          options={Vegetables}
-          onChange={(e) => {
-            const selectedFoods = foodsnutrition.filter(food =>
-            e.includes(food.name)
-          );
-
-          if (selectedFoods.length === 0) return;
-          const totals = selectedFoods.reduce(
-            (acc, food) => {
-            acc.carbs += food.carbs;
-            acc.protein += food.protein;
-            acc.fats += food.fat;
-            acc.calories += food.calories;
-             return acc;
-            },
-            { carbs: 0, protein: 0, fats: 0, calories: 0 }
-           
-          );
-          updatesnackitem(3, "Carbohydrate", totals.carbs);
-          updatesnackitem(3, "Protein", totals.protein);
-          updatesnackitem(3, "Fats", totals.fats);
-          updatesnackitem(3, "calories", totals.calories);
-          }}
-        />
-          </div>
-        </div>
-        {/* <div className="grid grid-cols-2 gap-6">
           <div>
-            <Label>Height</Label>
+            <Label>Grain gram</Label>
             <Input
               type="number"
-              name="height"
-              value={info.height}
-              onChange={handleChange}
+              name="Grain"
+             onChange={(e) => {
+              setgraingram(Number(e.target.value))
+               }}
             />
           </div>
-
           <div>
-            <Label>Weight</Label>
+        <button
+        onClick={handleAddFood}
+          type="button"
+        className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6"
+        >
+          Add to Grain List
+        </button>
+          </div>
+        </div>
+        <div className="grid grid-cols-4 gap-6" >
+          <div className="relative z-19">
+        <MultiSelect
+          label="Select Protein"
+          options={Protein}
+          onChange={(e) => {
+            setprotein(e[0])
+          }}
+        />
+          </div>
+          <div>
+            <Label>Protein gram</Label>
             <Input
               type="number"
-              name="weight" 
-              value={info.weight}
-              onChange={handleChange}
+              name="Protein"
+             onChange={(e) => {
+              setproteingram(Number(e.target.value))
+               }}
             />
           </div>
-        </div> */}
+          <div>
+        <button
+        onClick={handleAddProtein}
+          type="button"
+        className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6"
+     
+        >
+          Add to Protein List
+        </button>
+          </div>
+        </div>
 
-        {/* Submit */}
+        <div className="grid grid-cols-4 gap-6" >
+          <div className="relative z-18">
+        <MultiSelect
+          label="Select Fruits"
+          options={Fruits}
+          onChange={(e) => {
+            setfruit(e[0])
+          }}
+        />
+          </div>
+          <div>
+            <Label>Fruits gram</Label>
+            <Input
+              type="number"
+              name="Fruits"
+             onChange={(e) => {
+              setfruitgram(Number(e.target.value))
+               }}
+            />
+          </div>
+          <div>
+        <button
+        onClick={handleAddFruit}
+          type="button"
+        className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6"
+     
+        >
+          Add to Fruit List
+        </button>
+          </div>
+        </div>
+
+      <div className="grid grid-cols-4 gap-6" >
+          <div className="relative z-18">
+        <MultiSelect
+          label="Select Vegetables"
+          options={Vegetables}
+          onChange={(e) => {
+            setvegetables(e[0])
+          }}
+        />
+          </div>
+          <div>
+            <Label>Vegetables gram</Label>
+            <Input
+              type="number"
+              name="Vegetables"
+             onChange={(e) => {
+              setvegetablesgram(Number(e.target.value))
+               }}
+            />
+          </div>
+          <div>
+        <button
+        onClick={handleAddVegetables}
+          type="button"
+        className="w-full bg-blue-600 text-white py-3 rounded-lg mt-6"
+     
+        >
+          Add to Vegetables List
+        </button>
+          </div>
+        </div>
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="max-w-full overflow-x-auto">
+        <Table>
+          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+            <TableRow>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+              >
+                Grain
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+               Gram
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Remove
+              </TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+            {GrainList.map((value,index) => (
+              <TableRow key={index}>
+                <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                  {value.name}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {value.gram}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-start">
+                <button
+                onClick={() => handleRemoveGrain(index)}
+                className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
+                >
+                Remove
+                </button>
+              </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="max-w-full overflow-x-auto">
+        <Table>
+          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+            <TableRow>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+              >
+                Protein
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+               Gram
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Remove
+              </TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+            {ProteinList.map((value,index) => (
+              <TableRow key={index}>
+                <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                  {value.name}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {value.gram}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-start">
+                <button
+                onClick={() => handleRemoveProtein(index)}
+                className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
+                >
+                Remove
+                </button>
+              </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="max-w-full overflow-x-auto">
+        <Table>
+          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+            <TableRow>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+              >
+                Fruit
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+               Gram
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Remove
+              </TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+            {fruitList.map((value,index) => (
+              <TableRow key={index}>
+                <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                  {value.name}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {value.gram}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-start">
+                <button
+                onClick={() => handleRemoveFruit(index)}
+                className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
+                >
+                Remove
+                </button>
+              </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="max-w-full overflow-x-auto">
+        <Table>
+          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+            <TableRow>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-center text-theme-xs dark:text-gray-400"
+              >
+                Vegetables
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+               Gram
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Remove
+              </TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+            {vegetablesList.map((value,index) => (
+              <TableRow key={index}>
+                <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
+                  {value.name}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {value.gram}
+                </TableCell>
+                <TableCell className="px-4 py-3 text-start">
+                <button
+                onClick={() => handleRemoveVegetables(index)}
+                className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
+                >
+                Remove
+                </button>
+              </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
         <div className="grid grid-cols-2 gap-6">
         <button
+        onClick={calculate_macros}
           type="button"
           className="w-full bg-blue-600 text-white py-3 rounded-lg"
-          onClick={()=>{
-            evaluation_button(average_adherence(
-              Number(adherence_score(totalcarbohydrate,formData.carbohydrates).toFixed(2))
-            ,Number(adherence_score(totalProtein,formData.protein).toFixed(2)),
-            Number(adherence_score(totalcalories,formData.calories).toFixed(2)),
-            Number(adherence_score(totalfats,formData.fats).toFixed(2))))
-          }}
         >
          Calculate with the adherence score and make the comparison with the diet 
         </button>
-
           </div>
-
       </form>
       <div>
       <Modal isOpen={isOpen} onClose={() => {
+            setfinalfat(0);
+            setfinalcholestrol(0);
+            setfinalcharbohyrdate(0);
+            setfinalprotein(0);
+            setevaluation("");
+            setbuttontxt("Click here to know your final evaluation");
             closeModal();
         }}
      className="max-w-[700px] m-4">
@@ -880,42 +630,42 @@ const button_navigation_click = () => {
             actual vs target
             </h4>
             <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-            Calories -- {totalcalories} / {formData.calories.toFixed(2)} -- 
-            Adherence score is : {adherence_score(totalcalories,formData.calories).toFixed(2)}
+            Calories -- {finalcholestrol.toFixed(2)} kcal / {formData.calories.toFixed(2)} kcal -- 
+            Adherence score is : {adherence_score(finalcholestrol,formData.calories).toFixed(2)}
            
             </p>
             <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-             Carbohydrates -- {totalcarbohydrate} / {formData.carbohydrates.toFixed(2)} -- 
-            Adherence score is : {adherence_score(totalcarbohydrate,formData.carbohydrates).toFixed(2)}
+             Carbohydrates -- {finalcharbohyrdate.toFixed(2)} gr / {formData.carbohydrates.toFixed(2)} gr -- 
+            Adherence score is : {adherence_score(finalcharbohyrdate,formData.carbohydrates).toFixed(2)}
             </p>
              <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-            Protein -- {totalProtein.toFixed(2)} / {formData.protein.toFixed(2)} -- 
-            Adherence score is : {adherence_score(totalProtein,formData.protein).toFixed(2)}
+            Protein -- {finalprotein.toFixed(2)} gr / {formData.protein.toFixed(2)} gr -- 
+            Adherence score is : {adherence_score(finalprotein,formData.protein).toFixed(2)}
             </p>
             <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-            fats -- {totalfats} / {formData.fats.toFixed(2)}  -- 
-            Adherence score is : {adherence_score(totalfats,formData.fats).toFixed(2)}
+            fats -- {finalfat.toFixed(2)} gr/ {formData.fats.toFixed(2)} gr -- 
+            Adherence score is : {adherence_score(finalfat,formData.fats).toFixed(2)}
             </p>
                       
            <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
             Final adherence is this -- {average_adherence(
-              Number(adherence_score(totalcarbohydrate,formData.carbohydrates).toFixed(2))
-            ,Number(adherence_score(totalProtein,formData.protein).toFixed(2)),
-            Number(adherence_score(totalcalories,formData.calories).toFixed(2)),
-            Number(adherence_score(totalfats,formData.fats).toFixed(2))).toFixed(2)} %
+              Number(adherence_score(finalcharbohyrdate,formData.carbohydrates).toFixed(2))
+            ,Number(adherence_score(finalprotein,formData.protein).toFixed(2)),
+            Number(adherence_score(finalcholestrol,formData.calories).toFixed(2)),
+            Number(adherence_score(finalfat,formData.fats).toFixed(2))).toFixed(2)} %
             </p>
             <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
               Evaluation of the score is : {evaluation}
             </p>
-                    <button
+          <button
           type="button"
           className="w-100 bg-green-600 text-white py-3 rounded-lg"
           onClick={()=>{
             evaluation_button(average_adherence(
-              Number(adherence_score(totalcarbohydrate,formData.carbohydrates).toFixed(2))
-            ,Number(adherence_score(totalProtein,formData.protein).toFixed(2)),
-            Number(adherence_score(totalcalories,formData.calories).toFixed(2)),
-            Number(adherence_score(totalfats,formData.fats).toFixed(2))))
+              Number(adherence_score(finalcharbohyrdate,formData.carbohydrates).toFixed(2))
+            ,Number(adherence_score(finalprotein,formData.protein).toFixed(2)),
+            Number(adherence_score(finalcholestrol,formData.calories).toFixed(2)),
+            Number(adherence_score(finalfat,formData.fats).toFixed(2))))
             button_navigation_click();
           }}
         >

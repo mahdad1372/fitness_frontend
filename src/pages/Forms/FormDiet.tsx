@@ -27,12 +27,11 @@ export default function Formdiet() {
     calories:0,
     protein:0,
     carbohydrates:0,
-    fats:0
+    fats:0,
+    muscle_size:0,
+    deadlift:0
   });
-  // const [calories,setcalories] = useState(0);
-  // const [protein,setprotein] = useState(0);
-  // const [fat,setfat] = useState(0);
-  // const [carbs,setcarbs] = useState(0);
+
   const Genderoptions = [
     { value: "Male", text: "Male" },
     { value: "Female", text: "Female" },
@@ -44,7 +43,7 @@ export default function Formdiet() {
     { value: "MUSCLE_GAIN", text: "Muscle Gain / Bulking (Increase muscle mass)" },
     { value: "BODY_RECOMPOSITION", text: "Body Recomposition (Lose fat + gain muscle)" },
     { value: "PERFORMANCE_ENHANCEMENT", text: "Performance Enhancement (Improve athletic performance)" },
-    { value: "Healthy Lifestyle", text: "Healthy Lifestyle (General wellness and balanced nutrition)" }
+    // { value: "Healthy Lifestyle", text: "Healthy Lifestyle (General wellness and balanced nutrition)" }
   ];
 
   const Activitylevel = [
@@ -185,6 +184,12 @@ export default function Formdiet() {
     setinfo(prev => ({...prev, fats: Math.round(Fats)}));
     setinfo(prev => ({...prev, protein: Math.round(Protein)}));
     setinfo(prev => ({...prev, carbohydrates: Math.round(Carbohydrates)}));
+    setFormData(prev => ({...prev, carbohydrates: Math.round(Carbohydrates)}));
+    setFormData(prev => ({...prev, protein: Math.round(Protein)}));
+    setFormData(prev => ({...prev, calories: Math.round(TargetCalories)}));
+    setFormData(prev => ({...prev, fats: Math.round(Fats)}));
+    setFormData(prev => ({...prev, deadlift: info.deadlift}));
+    setFormData(prev => ({...prev, muscle_size: info.muscle_size}));
     if (info.Activitylevel.length === 0) {
       alert("Please select Activitylevel");
       return;
@@ -285,7 +290,39 @@ export default function Formdiet() {
               onChange={handleChange}
             />
           </div>
-
+          {info.goaldiet === "PERFORMANCE_ENHANCEMENT" && (
+          <div>
+          <Label>Deadlift number</Label>
+          <Input
+          type="number"
+          name="deadlift"
+          value={info.deadlift}
+          onChange={handleChange}
+          />
+          </div>
+          )}
+          {info.goaldiet === "MUSCLE_GAIN" && (
+          <div>
+          <Label>Muscle measure</Label>
+          <Input
+          type="number"
+          name="muscle_size"
+          value={info.muscle_size}
+          onChange={handleChange}
+          />
+          </div>
+          )}
+          {info.goaldiet === "BODY_RECOMPOSITION" && (
+          <div>
+          <Label>Muscle measure</Label>
+          <Input
+          type="number"
+          name="muscle_size"
+          value={info.muscle_size}
+          onChange={handleChange}
+          />
+          </div>
+          )}
           <div>
             <Label>Weight</Label>
             <Input
@@ -318,13 +355,7 @@ export default function Formdiet() {
           type="button"
           className="w-full bg-blue-600 text-white py-3 rounded-lg"
           onClick={()=>{
-              // setFormData(prev => ({
-              //     ...prev,
-              //     calories: calories,
-              //     protein: protein,
-              //     fats: fat,
-              //     carbohydrates: carbs,
-              //                       }));
+            setFormData(prev => ({...prev, goal_diet: info.goaldiet}));
             navigate("/consume_meal");
           }}
         >

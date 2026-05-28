@@ -13,7 +13,9 @@ type WorkoutData = {
   carbohydrates:number,
   weight:number
   goal_diet:string,
-  Exerciseaimtype:string
+  Exerciseaimtype:string,
+  muscle_size:number,
+  deadlift:number
 };
 
 type WorkoutContextType = {
@@ -38,7 +40,9 @@ export const WorkoutProvider = ({ children }: { children: React.ReactNode }) => 
     fats:0,
     carbohydrates:0,
     weight:0,
-     goal_diet:"",
+    goal_diet:"",
+    muscle_size:0,
+    deadlift:0
   });
 
   const startWorkout = () => {
