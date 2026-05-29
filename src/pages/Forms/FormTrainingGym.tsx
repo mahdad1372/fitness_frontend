@@ -16,6 +16,7 @@ export default function FormTrainingGym() {
         <ComponentCard title={formData.goal_diet}>
           <ExerciseTable />
         </ComponentCard>
+
       </div>
 
     </>

@@ -68,6 +68,19 @@ export default function Formdiet() {
     const id = Cookies.get("userId");
     if (id) setUserId(Number(id));
     setLoading(false);
+    if(formData.goal_gym){
+      if(formData.goal_gym === "muscle_gain"){
+        setinfo(prev => ({ ...prev, goaldiet: "MUSCLE_GAIN" }))
+      }else if(formData.goal_gym === "fat_loss"){
+        setinfo(prev => ({ ...prev, goaldiet: "FAT_LOSS" }))
+      }else if(formData.goal_gym === "recomposition"){
+        setinfo(prev => ({ ...prev, goaldiet: "BODY_RECOMPOSITION" }))
+      }else if(formData.goal_gym === "strength"){
+        setinfo(prev => ({ ...prev, goaldiet: "PERFORMANCE_ENHANCEMENT" }))
+      }else if(formData.goal_gym === "fitness"){
+        setinfo(prev => ({ ...prev, goaldiet: "MAINTENANCE" }))
+      }
+    }
   }, []);
 
   useEffect(() => {
@@ -225,12 +238,11 @@ export default function Formdiet() {
     openModal();
   }
 
-
-  
   return (
     <ComponentCard title="Add diet">
       <form  className="space-y-6">
         <div className="grid grid-cols-3 gap-6">
+          {formData.goal_gym === "" && (
         <div className = "relative z-52">
         <MultiSelect
           label="Select Goal diet"
@@ -240,6 +252,7 @@ export default function Formdiet() {
           }
         />
      </div>
+          )}
         <div className = "relative z-52">
         <MultiSelect
           label="Activity level"
@@ -351,7 +364,7 @@ export default function Formdiet() {
         >
           Calculate the calories and Macros and genertae diet
         </button>
-         <button
+         {/* <button
           type="button"
           className="w-full bg-blue-600 text-white py-3 rounded-lg"
           onClick={()=>{
@@ -360,7 +373,7 @@ export default function Formdiet() {
           }}
         >
           Let's go for consuming the Meal
-        </button>
+        </button> */}
           </div>
       </form>
       <div>
@@ -389,6 +402,16 @@ export default function Formdiet() {
              Fats : {info.fats} gr/day
             </p>
           </div>
+          <button
+          type="button"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg"
+          onClick={()=>{
+            setFormData(prev => ({...prev, goal_diet: info.goaldiet}));
+            navigate("/consume_meal");
+          }}
+        >
+          Let's go for consuming the Meal
+        </button>
         </div>
       </Modal>
       </div>

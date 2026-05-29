@@ -84,18 +84,38 @@ const formatTime = (totalSeconds: number) => {
 };
 const displaymsg = ()=>{
     if(formData.rpe === Currentworkout.RPE && formData.sets === Currentworkout.Sets){
+    setFormData((prev) => ({ ...prev, gym_Scheduale: prev.gym_Scheduale.map((item, i) =>
+      i === formData.gym_Scheduale.findIndex(
+  (item) =>
+    item.Day === formData.day_scheduale &&
+    item.Exercise === formData.exercises[0]
+)
+        ? { ...item, status: "Done" }
+        : item
+    ),
+  }));
     setmsg("🎉 Congratulations! You have finished your workout successfully");
-
+    if(formData.gym_Scheduale.filter((x)=> x.Day === formData.day_scheduale).every((item)=> item.status === "Done")){
+       setmsg("Great you completly done all your "+ formData.day_scheduale+ " schedual" )
+    }
     // ⏱️ Redirect after 4 seconds
-    setTimeout(() => {
-      navigate("/");
-    }, 4000);
+    // setTimeout(() => {
+    //   navigate("/");
+    // }, 4000);
     }else{
+
         setmsg("You have not completed your workouts")
     }
   
     openModal()
 }
+//  const index = formData.gym_Scheduale.findIndex(
+//   (item) =>
+//     item.Day === formData.day_scheduale &&
+//     item.Exercise === formData.exercises[0]
+// );
+
+
 
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">

@@ -106,15 +106,37 @@ export default function Formdiet() {
         setstatus("Great the weight increase and yOU have reached your aim")
       }
     }
-         if (formData.goal_diet == "Maintain weight"){
+    if (formData.goal_diet == "Maintain weight"){
       if(formData.weight > info.weight){
         setstatus("The result is completly mistake your weight is changed so create your diet again")
       }else if(formData.weight == info.weight){
-            setstatus("Great the weight increase and yOU have reached your aim")
+            setstatus("Great the weight remain stable and you have reached your aim")
       }else{
         setstatus("The result is completly mistake your weight is changed so create your diet again")
       }
     }
+
+      if (formData.goal_diet == "MUSCLE_GAIN"){
+        if(formData.muscle_size < info.muscle_size){
+              setstatus("Greate you have reached to your aim which is the muscle gain")
+        }else{
+              setstatus("Sorry you are mistake you didn't reach to your aim which is the muscle gain")
+        }
+      }
+      if (formData.goal_diet == "BODY_RECOMPOSITION"){
+        if(formData.muscle_size < info.muscle_size && formData.weight > info.weight){
+              setstatus("Greate you have reached to your aim which is the BODY_RECOMPOSITION")
+        }else{
+              setstatus("Sorry you are mistake you didn't reach to your aim which is the BODY_RECOMPOSITION")
+        }
+      }
+      if (formData.goal_diet == "PERFORMANCE_ENHANCEMENT"){
+        if(formData.deadlift < info.deadlift ){
+              setstatus("Greate you have reached to your aim which is the PERFORMANCE_ENHANCEMENT")
+        }else{
+              setstatus("Sorry you are mistake you didn't reach to your aim which is the PERFORMANCE_ENHANCEMENT")
+        }
+      }
     openModal();
   }
 

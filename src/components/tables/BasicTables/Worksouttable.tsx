@@ -201,12 +201,6 @@ export default function Worksouttable() {
                 </TableCell>
                 <TableCell className="px-4 py-3 text-start">
                      {order.rpe} 
-                {/* <button
-                onClick={() => handleDeleteUser(order.user_id)}
-                className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
-                >
-                Delete
-                </button> */}
               </TableCell>
                  <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {order.intensity_percent} 

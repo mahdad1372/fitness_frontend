@@ -49,14 +49,76 @@ const tableData: Order[] = [
 
 export default function Trackworkouts() {
    const { formData } = useWorkout();
-   console.log(formData)
+
   return (
     <div>
+      {formData.consume_gym_scheduale && (
+    <ComponentCard title={formData.day_scheduale +" Planned gym scheduale" } >
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <div className="max-w-full overflow-x-auto">
+        <Table>
+          <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
+            <TableRow>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Exercise
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Sets
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Rpe
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                Status
+              </TableCell>
+            </TableRow>
+          </TableHeader>
+          <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+     {formData.gym_Scheduale.filter((x)=> x.Day === formData.day_scheduale).map((x, index) => (
+  <TableRow key={index}>
+    <TableCell className="px-5 py-4 sm:px-6 text-start">
+      {x.Exercise}
+    </TableCell>
+
+    <TableCell className="py-4 sm:px-6 text-start">
+      {x.Sets}
+    </TableCell>
+
+    <TableCell className="py-4 sm:px-6 text-start">
+      {x.Reps}
+    </TableCell>
+        <TableCell className="py-4 sm:px-6 text-start">
+     
+          <Badge color={x.status === "Done" ? "success" : "warning"}>
+            {x.status}
+          </Badge>
+      
+    </TableCell>
+  </TableRow>
+))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+    </ComponentCard>
+      )}
+
     <ComponentCard title="Planned workots">
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
         <Table>
-          {/* Table Header */}
           <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
             <TableRow>
               <TableCell
@@ -91,8 +153,6 @@ export default function Trackworkouts() {
               </TableCell>
             </TableRow>
           </TableHeader>
-
-          {/* Table Body */}
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
           <TableRow>
           <TableCell className="px-5 py-4 sm:px-6 text-start">
@@ -142,7 +202,7 @@ export default function Trackworkouts() {
                Track current workout
              </h3>
              <div className="space-y-6">
-         <Currentworkout />
+         <Currentworkout  />
              </div>
            </div>
      </div>

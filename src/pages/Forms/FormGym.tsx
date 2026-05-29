@@ -221,6 +221,7 @@ export default function FormGym() {
     });
     const category = Object.keys(maxCategory)[0];
     setfinalgoal(category);
+    setFormData(prev => ({ ...prev, goal_gym: category}))
     openModal();
   }
 
