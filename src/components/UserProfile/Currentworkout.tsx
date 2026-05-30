@@ -11,10 +11,22 @@ export default function Currentworkout() {
   const { isOpen, openModal, closeModal } = useModal();
   const [seconds, setSeconds] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
+  const [pause ,setpause] = useState(false);
   const navigate = useNavigate();
+    const exercise_time_duration = [
+  { name: "Treadmill Walking" },
+  { name: "Jogging" },
+  { name: "Plank" },
+  { name: "Walking Lunges" },
+  { name: "Battle Rope" },
+  { name: "Mountain Climbers" },
+  { name: "Walking" },
+  { name: "Cycling" },
+  { name: "Stretching" },
+  { name: "Jump Rope" }
+];
   const handleSave = () => {
     // Handle save logic here
-    console.log("Saving changes...");
     closeModal();
   };
   const [msg,setmsg] = useState("");
@@ -96,7 +108,7 @@ const displaymsg = ()=>{
   }));
     setmsg("🎉 Congratulations! You have finished your workout successfully");
     if(formData.gym_Scheduale.filter((x)=> x.Day === formData.day_scheduale).every((item)=> item.status === "Done")){
-       setmsg("Great you completly done all your "+ formData.day_scheduale+ " schedual" )
+       setmsg("Great you completely done all your "+ formData.day_scheduale+ " schedual" )
     }
     // ⏱️ Redirect after 4 seconds
     // setTimeout(() => {
@@ -137,7 +149,9 @@ const displaymsg = ()=>{
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-               RPE
+               {exercise_time_duration.some(ex => ex.name === formData.exercises[0])
+                  ? " Time (Min)"
+                  : "RPE"}
               </p>
             <Input
               type="number"

@@ -27,6 +27,18 @@ export default function Formworkouts() {
     {value : "Core & Abs",text :"Core & Abs"},
     {value:"Cardio & Conditioning", text:"Cardio & Conditioning"}
   ];
+  const exercise_time_duration = [
+  { name: "Treadmill Walking" },
+  { name: "Jogging" },
+  { name: "Plank" },
+  { name: "Walking Lunges" },
+  { name: "Battle Rope" },
+  { name: "Mountain Climbers" },
+  { name: "Walking" },
+  { name: "Cycling" },
+  { name: "Stretching" },
+  { name: "Jump Rope" }
+];
 
   const exercisesOptions = [
   { value: "Bench Press", text: "Bench Press", type: "Chest & Triceps" },
@@ -126,7 +138,7 @@ export default function Formworkouts() {
   };
 
   if (loading) return null;
-  console.log(formData.gym_Scheduale)
+
   return (
     <div>
       {formData.consume_gym_scheduale && (
@@ -254,8 +266,19 @@ export default function Formworkouts() {
           </div>
         </div>
 
-        {/* RPE */}
+         {exercise_time_duration.some(ex => ex.name === formData.exercises[0]) &&(
         <div>
+          <Label>Minutes duration</Label>
+          <Input
+            type="number"
+            name="rpe"
+            value={formData.rpe}
+            onChange={handleChange}
+          />
+        </div>
+         )}
+          {!exercise_time_duration.some(ex => ex.name === formData.exercises[0]) &&(
+          <div>
           <Label>RPE</Label>
           <Input
             type="number"
@@ -264,7 +287,7 @@ export default function Formworkouts() {
             onChange={handleChange}
           />
         </div>
-
+         )}
         {/* Submit */}
         <button
           type="submit"

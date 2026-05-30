@@ -49,7 +49,18 @@ const tableData: Order[] = [
 
 export default function Trackworkouts() {
    const { formData } = useWorkout();
-
+  const exercise_time_duration = [
+  { name: "Treadmill Walking" },
+  { name: "Jogging" },
+  { name: "Plank" },
+  { name: "Walking Lunges" },
+  { name: "Battle Rope" },
+  { name: "Mountain Climbers" },
+  { name: "Walking" },
+  { name: "Cycling" },
+  { name: "Stretching" },
+  { name: "Jump Rope" }
+];
   return (
     <div>
       {formData.consume_gym_scheduale && (
@@ -137,7 +148,9 @@ export default function Trackworkouts() {
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Rpe
+                  {exercise_time_duration.some(ex => ex.name === formData.exercises[0])
+                  ? "Time Duration"
+                  : "RPE"}
               </TableCell>
               <TableCell
                 isHeader
@@ -172,7 +185,9 @@ export default function Trackworkouts() {
               <TableCell className="py-4 sm:px-6 text-start">
                   <div className="flex items-center gap-3">
                     <div className="h-10 overflow-hidden">
-                     {formData.rpe}
+                     {formData.rpe}{exercise_time_duration.some(ex => ex.name === formData.exercises[0])
+                  ? " min"
+                  : ""}
                     </div>
                   </div>
                 </TableCell>

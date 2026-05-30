@@ -61,7 +61,7 @@
         "focus": "Cardio + Core",
         "exercises": [
           { "name": "Jogging", "sets": 1, "reps": "30 min" },
-          { "name": "Plank", "sets": 3, "reps": "60 sec" },
+          { "name": "Plank", "sets": 3, "reps": "1 min" },
           { "name": "Russian Twist", "sets": 3, "reps": "20" },
           { "name": "Leg Raise", "sets": 3, "reps": "15" }
         ]
@@ -79,9 +79,9 @@
         "focus": "Lower Body + Conditioning",
         "exercises": [
           { "name": "Deadlift", "sets": 4, "reps": "8" },
-          { "name": "Walking Lunges", "sets": 3, "reps": "20 steps" },
+          { "name": "Walking Lunges", "sets": 3, "reps": "1 min"},
           { "name": "Leg Press", "sets": 4, "reps": "12" },
-          { "name": "Battle Rope", "sets": 5, "reps": "30 sec" }
+          { "name": "Battle Rope", "sets": 5, "reps": "1 min" }
         ]
       },
       "friday": {
@@ -89,8 +89,8 @@
         "exercises": [
           { "name": "Burpees", "sets": 4, "reps": "15" },
           { "name": "Jump Squats", "sets": 4, "reps": "15" },
-          { "name": "Mountain Climbers", "sets": 4, "reps": "30 sec" },
-          { "name": "Push Ups", "sets": 3, "reps": "Max" }
+          { "name": "Mountain Climbers", "sets": 4, "reps": "1 min" },
+          { "name": "Push Ups", "sets": 3, "reps": "12" }
         ]
       }
     }
@@ -156,14 +156,14 @@
         "focus": "Mobility + Core",
         "exercises": [
           { "name": "Stretching", "sets": 1, "reps": "15 min" },
-          { "name": "Plank", "sets": 3, "reps": "45 sec" },
+          { "name": "Plank", "sets": 3, "reps": "1 min" },
           { "name": "Russian Twist", "sets": 3, "reps": "20" }
         ]
       },
       "thursday": {
         "focus": "Conditioning",
         "exercises": [
-          { "name": "Battle Rope", "sets": 5, "reps": "30 sec" },
+          { "name": "Battle Rope", "sets": 5, "reps": "1 min" },
           { "name": "Jump Rope", "sets": 5, "reps": "1 min" },
           { "name": "Burpees", "sets": 4, "reps": "12" }
         ]
@@ -194,7 +194,7 @@
         "focus": "Cardio + Core",
         "exercises": [
           { "name": "Jogging", "sets": 1, "reps": "25 min" },
-          { "name": "Plank", "sets": 3, "reps": "60 sec" },
+          { "name": "Plank", "sets": 3, "reps": "1 min" },
           { "name": "Leg Raise", "sets": 3, "reps": "15" }
         ]
       },

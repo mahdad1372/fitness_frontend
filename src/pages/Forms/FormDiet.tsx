@@ -203,6 +203,7 @@ export default function Formdiet() {
     setFormData(prev => ({...prev, fats: Math.round(Fats)}));
     setFormData(prev => ({...prev, deadlift: info.deadlift}));
     setFormData(prev => ({...prev, muscle_size: info.muscle_size}));
+    setFormData(prev => ({...prev, weight: info.weight}));
     if (info.Activitylevel.length === 0) {
       alert("Please select Activitylevel");
       return;
@@ -242,7 +243,7 @@ export default function Formdiet() {
     <ComponentCard title="Add diet">
       <form  className="space-y-6">
         <div className="grid grid-cols-3 gap-6">
-          {formData.goal_gym === "" && (
+      
         <div className = "relative z-52">
         <MultiSelect
           label="Select Goal diet"
@@ -252,7 +253,7 @@ export default function Formdiet() {
           }
         />
      </div>
-          )}
+
         <div className = "relative z-52">
         <MultiSelect
           label="Activity level"

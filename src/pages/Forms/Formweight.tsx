@@ -86,11 +86,12 @@ export default function Formdiet() {
   };
 
   if (loading) return null;
-  
+
+
   const calculatetheweight = () => {
-    if (formData.goal_diet == "Loss weight"){
-      if(formData.weight > info.weight){
-        setstatus("Great the weight decrease and yOU have reached your aim")
+    if (formData.goal_diet == "FAT_LOSS"){
+      if(formData.weight >  info.weight){
+        setstatus("Great the weight decrease and you have reached your aim")
       }else if(formData.weight == info.weight){
             setstatus("There is no any difference it's better to change you diet")
       }else{
@@ -229,7 +230,7 @@ export default function Formdiet() {
           className="w-full bg-blue-600 text-white py-3 rounded-lg"
           onClick={calculatetheweight}
         >
-          evaluate the goal achieving
+          Evaluate the goal achieving
         </button>
           </div>
 
