@@ -126,7 +126,7 @@ export default function Trackworkouts() {
     </ComponentCard>
       )}
 
-    <ComponentCard title="Planned workots">
+    <ComponentCard title="Planned gym exercise">
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
         <Table>
@@ -136,7 +136,7 @@ export default function Trackworkouts() {
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Workout Type
+                exercise Type
               </TableCell>
               <TableCell
                 isHeader
@@ -214,7 +214,7 @@ export default function Trackworkouts() {
 
            <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
              <h3 className="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
-               Track current workout
+               Track current exercise
              </h3>
              <div className="space-y-6">
          <Currentworkout  />

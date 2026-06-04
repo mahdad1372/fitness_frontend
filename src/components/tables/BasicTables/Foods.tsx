@@ -7,7 +7,9 @@ import {
 } from "../../ui/table";
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 import Badge from "../../ui/badge/Badge";
+import { useWorkout } from "../../../context/WorkoutContext";
 interface Food {
   food_id: number;
   user_id: number;
@@ -21,8 +23,10 @@ interface Food {
 }
 
 export default function Foods() {
+  const navigate = useNavigate();
   const [foods, setFoods] = useState<Food[]>([]);
   const [loading, setLoading] = useState(true);
+  const { formData, setFormData, startWorkout } = useWorkout();
 
   const fetchFoods = async () => {
     try {
@@ -37,7 +41,7 @@ export default function Foods() {
       const url =
         userRole === "ADMIN"
           ? "http://localhost:7000/foods/all"
-          : `http://localhost:7000/foods/${userId}`;
+          : `http://localhost:7000/foods/food_user_id/${userId}`;
 
       const response = await fetch(url, {
         method: "GET",
@@ -66,12 +70,12 @@ export default function Foods() {
   }, []);
 
   const handleDeleteFood = async (foodId: number) => {
-    const token = Cookies.get("token");
+    // const token = Cookies.get("token");
 
-    if (!token) {
-      alert("Unauthorized");
-      return;
-    }
+    // if (!token) {
+    //   alert("Unauthorized");
+    //   return;
+    // }
 
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this food?"
@@ -81,11 +85,10 @@ export default function Foods() {
 
     try {
       const response = await fetch(
-        `http://localhost:7000/foods/${foodId}`,
+        `http://localhost:7000/foods/deletefoods/${foodId}`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
@@ -217,10 +220,19 @@ export default function Foods() {
                 <TableCell className="px-4 py-3 text-start">
               
                 <button
-                onClick={() => handleDeletefoods(food.food_id)}
+                onClick={() => handleDeleteFood(food.food_id)}
                 className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
                 >
                 Delete
+                </button>
+               <button
+                onClick={() => 
+                  {setFormData(prev => ({ ...prev, editfood: true,
+                    food_id:food.food_id }))
+                navigate("/form-elements")}}
+                className="rounded-md bg-yellow-500 px-3 py-1 text-sm font-medium text-white hover:bg-yellow-600 transition ml-3"
+                >
+                Edit
                 </button>
               </TableCell>
               </TableRow>

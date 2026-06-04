@@ -5,18 +5,42 @@ import Input from "../input/InputField.tsx";
 import Select from "../Select.tsx";
 import { EyeCloseIcon, EyeIcon, TimeIcon } from "../../../icons/index.ts";
 import DatePicker from "../date-picker.tsx";
+import { useWorkout } from "../../../context/WorkoutContext";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 export default function Healthmetricsform() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
-
-  const [formData, setFormData] = useState({
+const { formData, setFormData, startWorkout } = useWorkout();
+  const [formData2, setFormData2] = useState({
     user_id: 0,
     cholesterol: 0,
     blood_pressure: 0,
     heart_rate: 0,
   });
+useEffect(() => {
+  if (formData.edithealthmetric === true) {
+    console.log("hello")
+fetch(`http://localhost:7000/health_metric/findbyhealth_id/${formData.health_id}`)
+  .then((response) => response.json())
+  .then((data) => {
+ 
 
+    const health = data[0];
+
+    setFormData2((prev) => ({
+      ...prev,
+      user_id: health.user_id,
+    cholesterol: health.cholesterol,
+    blood_pressure: health.blood_pressure,
+    heart_rate: health.heart_rate,
+    }));
+  });
+  }
+
+  setLoading(false);
+}, []);
   // Get userId from cookie
   useEffect(() => {
     const id = Cookies.get("userId");
@@ -29,7 +53,7 @@ export default function Healthmetricsform() {
   // Sync user_id into formData
   useEffect(() => {
     if (userId !== null) {
-      setFormData(prev => ({
+      setFormData2(prev => ({
         ...prev,
         user_id: userId,
       }));
@@ -40,7 +64,7 @@ export default function Healthmetricsform() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
 
-    setFormData(prev => ({
+    setFormData2(prev => ({
       ...prev,
       [name]: type === "number" ? Number(value) : value,
     }));
@@ -48,20 +72,32 @@ export default function Healthmetricsform() {
 
 
   const handleSubmit = async (e: React.FormEvent) => {
+   
     e.preventDefault();
-
+if(formData.edithealthmetric === true){
+   
+   await fetch(`http://localhost:7000/health_metric/update_healthmetric/${formData.health_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData2),
+      });
+    setFormData(prev => ({ ...prev, edithealthmetric: false, }))
+    navigate("/health-tables")
+}else{
     try {
       const response = await fetch("http://localhost:7000/health_metric/addmetrics", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData2),
       });
 
       if (response.ok) {
         alert("Workout added successfully!");
-        setFormData(prev => ({
+        setFormData2(prev => ({
           ...prev,
          cholesterol: 0,
         blood_pressure: 0,
@@ -73,6 +109,8 @@ export default function Healthmetricsform() {
     } catch (error) {
       console.error("Connection error:", error);
     }
+}
+
   };
 
   if (loading) return null;
@@ -86,7 +124,7 @@ export default function Healthmetricsform() {
           <Input
            type="number"
           name="cholesterol"
-          value={formData.cholesterol}
+          value={formData2.cholesterol}
           onChange={handleChange}
           placeholder="e.g. 200"
           />
@@ -98,7 +136,7 @@ export default function Healthmetricsform() {
             <Input
               type="number"
               name="blood_pressure"
-              value={formData.blood_pressure}
+              value={formData2.blood_pressure}
               onChange={handleChange}
             />
           </div>
@@ -110,7 +148,7 @@ export default function Healthmetricsform() {
             <Input
               type="number"
               name="heart_rate"
-              value={formData.heart_rate}
+              value={formData2.heart_rate}
               onChange={handleChange}
             />
           </div>
@@ -120,7 +158,8 @@ export default function Healthmetricsform() {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
           >
-            Save Health metrics
+            {formData.edithealthmetric === true ? "Edit Health metrics":"Save Health metrics"}
+            
           </button>
         </div>
       </form>

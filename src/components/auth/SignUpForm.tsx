@@ -17,11 +17,12 @@ export default function SignUpForm() {
     lastname: "",
     email: "",
     password: "",
-    gender: "",
-    height: "",
-    weight: "",
-    age: "",
+    gender: "male",
+    height: "180",
+    weight: "85",
+    age: "25",
     role: "USER",
+    smoke:1
   });
 
   const handleChange = (
@@ -57,6 +58,7 @@ export default function SignUpForm() {
           weight: Number(formData.weight),
           age: Number(formData.age),
           role: formData.role,
+          smoke:formData.smoke
         }),
       });
 
@@ -154,7 +156,7 @@ export default function SignUpForm() {
           </div>
 
           {/* Gender */}
-          <div>
+          {/* <div>
             <Label>Gender *</Label>
             <select
               name="gender"
@@ -168,10 +170,10 @@ export default function SignUpForm() {
               <option value="femail">Female</option>
               <option value="OTHER">Other</option>
             </select>
-          </div>
+          </div> */}
 
           {/* Height, Weight, Age */}
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+          {/* <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
             <div>
               <Label>Height (cm) *</Label>
               <Input
@@ -203,7 +205,7 @@ export default function SignUpForm() {
             
               />
             </div>
-          </div>
+          </div> */}
 
           {/* Role */}
           <div>

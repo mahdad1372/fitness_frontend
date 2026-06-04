@@ -23,13 +23,24 @@ type WorkoutData = {
   fats: number;
   carbohydrates: number;
   weight: number;
+  height:number;
   goal_diet: string;
   goal_gym: string;
   Exerciseaimtype: string;
   muscle_size: number;
+  bmi:number;
   deadlift: number;
   day_scheduale: string;
   consume_gym_scheduale: boolean;
+  editfood:boolean,
+  editgoal:boolean,
+  edituser:boolean,
+  edithealthmetric:boolean,
+  editworkout:boolean,
+  food_id:number,
+  goal_id:number,
+  health_id:number,
+  workout_id:number
 };
 
 type WorkoutContextType = {
@@ -63,12 +74,23 @@ export const WorkoutProvider = ({
     fats: 0,
     carbohydrates: 0,
     weight: 0,
+    height:0,
+    bmi:0,
     goal_diet: "",
     goal_gym: "",
     muscle_size: 0,
     deadlift: 0,
     day_scheduale: "",
     consume_gym_scheduale: false,
+    editfood:false,
+    editgoal:false,
+    edituser:false,
+    edithealthmetric:false,
+    editworkout:false,
+    workout_id:0,
+    goal_id:0,
+    food_id:0,
+    health_id:0
   });
 
   const startWorkout = () => {

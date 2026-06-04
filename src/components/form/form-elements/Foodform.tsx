@@ -3,12 +3,14 @@ import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 import Input from "../input/InputField";
 import Cookies from "js-cookie";
-
+import { useWorkout } from "../../../context/WorkoutContext";
+import { useNavigate } from "react-router-dom";
 export default function DefaultInputs() {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
-
-  const [formData, setFormData] = useState({
+const { formData, setFormData, startWorkout } = useWorkout();
+  const [formData2, setFormData2] = useState({
     user_id: 0,
     food_name: "",
     category: "",
@@ -27,23 +29,52 @@ export default function DefaultInputs() {
       setUserId(Number(id));
     }
     setLoading(false);
+    if(formData.editfood === true){
+      
+    }
   }, []);
 
   // Sync user_id into formData
   useEffect(() => {
     if (userId !== null) {
-      setFormData(prev => ({
+      setFormData2(prev => ({
         ...prev,
         user_id: userId,
       }));
     }
   }, [userId]);
+useEffect(() => {
+ 
 
+  if (formData.editfood === true) {
+fetch(`http://localhost:7000/foods/${formData.food_id}`)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+
+    const food = data[0];
+
+    setFormData2((prev) => ({
+      ...prev,
+      food_name: food.food_name,
+      category: food.category,
+      calories: food.calories,
+      protein: food.protein,
+      carbohydrates: food.carbohydrates,
+      fats: food.fats,
+      meal_time: food.meal_time,
+      notes: food.notes
+    }));
+  });
+  }
+
+  setLoading(false);
+}, []);
   // Unified change handler
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
 
-    setFormData(prev => ({
+    setFormData2(prev => ({
       ...prev,
       [name]: type === "number" ? Number(value) : value,
     }));
@@ -51,19 +82,29 @@ export default function DefaultInputs() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+if(formData.editfood === true){
+   await fetch(`http://localhost:7000/foods/updatefoods/${formData.food_id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData2),
+      });
+    setFormData(prev => ({ ...prev, editfood: false, }))
+    navigate("/food-tables")
+}else{
     try {
       const response = await fetch("http://localhost:7000/foods/addfoods", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData2),
       });
 
       if (response.ok) {
         alert("foods added successfully!");
-        setFormData(prev => ({
+        setFormData2(prev => ({
           ...prev,
             food_name: "",
             category: "",
@@ -80,6 +121,8 @@ export default function DefaultInputs() {
     } catch (error) {
       console.error("Connection error:", error);
     }
+}
+
   };
 
   if (loading) return null;
@@ -93,7 +136,7 @@ export default function DefaultInputs() {
             <Input
               type="text"
               name="food_name"
-              value={formData.food_name}
+              value={formData2.food_name}
               onChange={handleChange}
               placeholder="food_name"
             />
@@ -104,7 +147,7 @@ export default function DefaultInputs() {
             <Input
               type="text"
               name="category"
-              value={formData.category}
+              value={formData2.category}
               onChange={handleChange}
             />
           </div>
@@ -116,7 +159,7 @@ export default function DefaultInputs() {
             <Input
               type="number"
               name="calories"
-              value={formData.calories}
+              value={formData2.calories}
               onChange={handleChange}
             />
           </div>
@@ -126,7 +169,7 @@ export default function DefaultInputs() {
             <Input
               type="number"
               name="protein"
-              value={formData.protein}
+              value={formData2.protein}
               onChange={handleChange}
             />
           </div>
@@ -138,7 +181,7 @@ export default function DefaultInputs() {
             <Input
               type="number"
               name="carbohydrates"
-              value={formData.carbohydrates}
+              value={formData2.carbohydrates}
               onChange={handleChange}
             />
           </div>
@@ -148,7 +191,7 @@ export default function DefaultInputs() {
             <Input
               type="number"
               name="fats"
-              value={formData.fats}
+              value={formData2.fats}
               onChange={handleChange}
             />
           </div>
@@ -157,7 +200,7 @@ export default function DefaultInputs() {
             <Input
               type="text"
               name="meal_time"
-              value={formData.meal_time}
+              value={formData2.meal_time}
               onChange={handleChange}
               placeholder="meal_time"
             />
@@ -167,7 +210,7 @@ export default function DefaultInputs() {
             <Input
               type="text"
               name="notes"
-              value={formData.notes}
+              value={formData2.notes}
               onChange={handleChange}
               placeholder="notes"
             />
@@ -179,7 +222,8 @@ export default function DefaultInputs() {
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
           >
-            Save Foods
+            {formData.editfood === true ? "Edit food":"save food"}
+            {/* Save Foods */}
           </button>
         </div>
       </form>

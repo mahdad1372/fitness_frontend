@@ -17,12 +17,12 @@ import Worksouttable from "./pages/Tables/WorkoutsTables";
 import HealthmetricsTabls from "./pages/Tables/HealthmetrixTables";
 import GoalTables from "./pages/Tables/GoalTables";
 import FoodTables from "./pages/Tables/FoodTables";
-import Formworkouts from "../src/pages/Forms/Formworkouts";
+import Formgymexercise from "./pages/Forms/Formgymexercise";
 import Trackworkouts from "./components/tables/BasicTables/Trackworkouts";
 import { WorkoutProvider } from "./context/WorkoutContext";
 import Formdiet from "./pages/Forms/FormDiet";
 import FormMealConsume from "./pages/Forms/FormMealConsume";
-import Formweight from "../src/pages/Forms/Formweight";
+import Formweight from "./pages/Forms/Form_evaluation_diet";
 import FormGym from "../src/pages/Forms/FormGym";
 import ForTrainingGym from "./pages/Forms/FormTrainingGym";
 export default function App() {
@@ -44,7 +44,7 @@ export default function App() {
             <Route path="/goal-tables" element={<GoalTables />} />
             <Route path="/food-tables" element={<FoodTables />} />
             <Route path="/alerts" element={<Alerts />} />
-            <Route path="/addworkouts" element={<Formworkouts/>} />
+            <Route path="/addworkouts" element={<Formgymexercise/>} />
             <Route path="/trackworkouts" element={<Trackworkouts/>} />
             <Route path="/adddiet" element={<Formdiet/>} />
             <Route path="/consume_meal" element={<FormMealConsume/>}/>

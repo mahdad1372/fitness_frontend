@@ -98,14 +98,16 @@ export default function FormGym() {
     }));
   };
   const calculation = () => {
-    const bmi = info.weight/((info.height^2)/100)
+    
+    const bmi = info.weight/((info.height^2)/100);
     const Waist_to_Height_Ratio =  info.waist/info.height;
     var muscle_gain = 0
     var fat_loss = 0
     var strength = 0
     var fitness = 0 
     var recomposition = 0
-    
+    setFormData(prev => ({ ...prev, height: info.height}))
+    setFormData(prev => ({ ...prev, bmi: bmi}))
     if(bmi < 18.5 ){
       muscle_gain += 4
     }
@@ -283,6 +285,7 @@ export default function FormGym() {
               type="number"
               name="height"
               value={info.height}
+              
               onChange={handleChange}
             />
           </div>

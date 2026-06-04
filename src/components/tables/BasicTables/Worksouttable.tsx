@@ -8,14 +8,16 @@ import {
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Badge from "../../ui/badge/Badge";
-
+import { useWorkout } from "../../../context/WorkoutContext";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function Worksouttable() {
  const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const navigate = useNavigate();
+   const { formData, setFormData, startWorkout } = useWorkout();
   const fetchUsers = async () => {
     try {
       const token = Cookies.get("token"); // 👈 token from cookie
@@ -67,13 +69,13 @@ export default function Worksouttable() {
     }
 
     const confirmDelete = window.confirm(
-      "Are you sure you want to delete this user?"
+      "Are you sure you want to delete this workout?"
     );
 
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:7000/users/${id}`, {
+      const response = await fetch(`http://localhost:7000/worksout/deleteactivity/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -82,7 +84,7 @@ export default function Worksouttable() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to delete user");
+        throw new Error("Failed to delete workout");
       }
 
       // Remove user from UI immediately
@@ -171,6 +173,7 @@ export default function Worksouttable() {
           {/* Table Body */}
           <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
             {users.map((order) => (
+              
               <TableRow >
                 <TableCell className="px-4 py-3 text-gray-500 text-center text-theme-sm dark:text-gray-400">
                   {order.workout_id}
@@ -208,10 +211,19 @@ export default function Worksouttable() {
                 <TableCell className="px-4 py-3 text-start">
               
                 <button
-                onClick={() => handleDeleteUser(order.user_id)}
+                onClick={() => handleDeleteUser(order.workout_id)}
                 className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
                 >
                 Delete
+                </button>
+                <button
+                 onClick={() => 
+                  {
+                    setFormData(prev => ({ ...prev, editworkout: true, workout_id:order.workout_id }))
+                navigate("/form-elements")}}
+                className="rounded-md bg-yellow-500 px-3 py-1 text-sm font-medium text-white hover:bg-yellow-600 transition ml-3"
+                >
+                Edit
                 </button>
               </TableCell>
               </TableRow>

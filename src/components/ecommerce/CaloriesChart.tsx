@@ -101,8 +101,8 @@ export default function CaloriesChart() {
       const fetchfoods= async () => {
         try {
           const id = Cookies.get("userId"); // 👈 cookie name "token"
-  
-          const response = await fetch(`http://localhost:7000/foods/${id}`, {
+          console.log(id)
+          const response = await fetch(`http://localhost:7000/foods/food_user_id/${id}`, {
             method: "GET"
           });
   

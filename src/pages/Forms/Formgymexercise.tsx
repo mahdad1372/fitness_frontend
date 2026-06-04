@@ -211,13 +211,13 @@ export default function Formworkouts() {
     </ComponentCard>
       )}
 
-    <ComponentCard title="Workouts">
+    <ComponentCard title="Gym exercise">
       <form onSubmit={handleSubmit} className="space-y-6">
 
-        {/* Workout Type */}
+    
         <div className="relative z-52">
         <MultiSelect
-          label="Select workout type"
+          label="Select Gym exercise category (type)"
           options={multiOptions}
           onChange={(values) =>
             setFormData(prev => ({ ...prev, type: values }))
@@ -293,7 +293,7 @@ export default function Formworkouts() {
           type="submit"
           className="w-full bg-blue-600 text-white py-3 rounded-lg"
         >
-          Start Workout
+          Start exercise
         </button>
       </form>
     </ComponentCard>

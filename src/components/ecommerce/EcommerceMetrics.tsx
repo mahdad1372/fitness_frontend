@@ -134,7 +134,7 @@ useEffect(() => {
               Cardiovascular
             </span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {cardioData.cardio}
+              {cardioData.cardio.toFixed(2)}
             </h4>
           </div>
 

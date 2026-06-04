@@ -4,42 +4,32 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { MoreDotIcon } from "../../icons";
 import { useEffect, useState } from "react";
-import { useWorkout } from "../../context/WorkoutContext";
 import Cookies from "js-cookie"; 
 export default function MonthlyTarget() {
   const [bmi, setBmi] = useState<number>(0);
   const [statusbmi, setStatusBmi] = useState<string>("");
-  const { formData, setFormData, startWorkout } = useWorkout();
+
   useEffect(() => {
     const fetchBMI = async () => {
+      try {
+        const userId = Cookies.get("userId"); // get userId from cookies
+        if (!userId) return;
 
-      setBmi(formData.bmi);
-              
-        if (bmi < 18.5) {
-          setStatusBmi("Underweight");
-        }
-        else if (bmi < 25) {
-          setStatusBmi("Normal weight");
-        } 
-        else if (bmi < 30) {
-          setStatusBmi("Overweight")
-        }
-        else if (bmi < 35) {
-          setStatusBmi("Obese (Class I)")
-        }
-        else if (bmi < 40) {
-          setStatusBmi("Obese (Class II)")
-        } 
-        else {
-          setStatusBmi("Obese (Class III)")
-        } 
+        const response = await fetch(`http://localhost:7000/users/bmi/${userId}`);
+        if (!response.ok) throw new Error("Failed to fetch BMI");
 
+        const data = await response.json();
+        setBmi(data.bmi);
+        setStatusBmi(data.status);
+      } catch (error) {
+        console.error("Error fetching BMI:", error);
+      }
     };
 
     fetchBMI();
   }, []);
 
-  const series = [bmi.toFixed(2)];
+  const series = [bmi];
   const options: ApexOptions = {
     colors: ["#465FFF"],
     chart: {
@@ -147,7 +137,7 @@ export default function MonthlyTarget() {
           </span>
         </div>
         <p className="mx-auto mt-10 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
-          You status from the Bmi is : {statusbmi}
+          evaluate_score: {statusbmi}
         </p>
       </div>
 

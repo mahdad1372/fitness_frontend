@@ -107,7 +107,7 @@ export default function Formdiet() {
         setstatus("Great the weight increase and yOU have reached your aim")
       }
     }
-    if (formData.goal_diet == "Maintain weight"){
+    if (formData.goal_diet == "MAINTENANCE"){
       if(formData.weight > info.weight){
         setstatus("The result is completly mistake your weight is changed so create your diet again")
       }else if(formData.weight == info.weight){
@@ -141,6 +141,7 @@ export default function Formdiet() {
     openModal();
   }
 
+ 
   return (
     <ComponentCard title={info.header}>
       <form onSubmit={handleSubmit} className="space-y-6">

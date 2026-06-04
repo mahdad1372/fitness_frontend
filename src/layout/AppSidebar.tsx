@@ -56,11 +56,11 @@ const navItems: NavItem[] = [
   { name: "food tables", path: "/food-tables", pro: false }],
   },
     {
-    name: "Workouts",
+    name: "Gym exercise",
      icon: <TableIcon />,
     subItems: [
-      { name: "Add workouts", path: "/addworkouts", pro: false },
-      { name: "Track workoots", path: "/trackworkouts", pro: false },
+      { name: "Add gym exercise", path: "/addworkouts", pro: false },
+      { name: "Track gym exercise", path: "/trackworkouts", pro: false },
     ],
   }, {
     name: "Diet",

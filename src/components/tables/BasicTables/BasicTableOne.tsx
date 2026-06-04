@@ -8,7 +8,8 @@ import {
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Badge from "../../ui/badge/Badge";
-
+import { useWorkout } from "../../../context/WorkoutContext";
+import { useNavigate } from "react-router-dom";
 interface Order {
   id: number;
   user: {
@@ -111,19 +112,27 @@ const tableData: Order[] = [
 ];
 
 export default function BasicTableOne() {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const { formData, setFormData, startWorkout } = useWorkout();
     const fetchUsers = async () => {
       try {
+        const userRole = Cookies.get("userrole");
+        const userId = Cookies.get("userId");
         const token = Cookies.get("token"); // 👈 cookie name "token"
+        const url =
+        userRole === "ADMIN"
+          ? "http://localhost:7000/users/all"
+          : `http://localhost:7000/users/${userId}`;
 
-        const response = await fetch("http://localhost:7000/users/all", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
         if (!response.ok) {
           throw new Error("Failed to fetch users");
@@ -208,6 +217,12 @@ const handleDeleteUser = async (id: number) => {
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
+                Role 
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
                 lastname
               </TableCell>
               <TableCell
@@ -220,38 +235,16 @@ const handleDeleteUser = async (id: number) => {
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                Gender
-              </TableCell>
-              <TableCell
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
                 password
               </TableCell>
+          
               <TableCell
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                weight
+                Action
               </TableCell>
-              <TableCell
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                height
-              </TableCell>
-              <TableCell
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                age
-              </TableCell>
-              <TableCell
-                isHeader
-                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-              >
-                Actions
-              </TableCell>
+     
             </TableRow>
           </TableHeader>
 
@@ -268,19 +261,19 @@ const handleDeleteUser = async (id: number) => {
                       <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
                         {order.firstname}
                       </span>
-                      <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
+                      {/* <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
                         {order.role}
-                      </span>
+                      </span> */}
                     </div>
                   </div>
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                  {order.lastname}
+                  {order.role}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {order.email}
+                    {order.lastname}
                 </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                {/* <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                   <Badge
                     size="sm"
                     color={
@@ -293,27 +286,43 @@ const handleDeleteUser = async (id: number) => {
                   >
                     {order.gender}
                   </Badge>
+                </TableCell> */}
+                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                  {order.email}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {order.password}
                 </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                {/* <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {order.weight} kg
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                </TableCell> */}
+                {/* <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {order.height} m
-                </TableCell>
-                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                </TableCell> */}
+                {/* <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {order.age} 
-                </TableCell>
+                </TableCell> */}
+          
                 <TableCell className="px-4 py-3 text-start">
+                {Cookies.get("userrole") === "ADMIN" && (
                 <button
                 onClick={() => handleDeleteUser(order.user_id)}
                 className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
                 >
                 Delete
                 </button>
+                  )}
+                <button
+                // onClick={() => 
+                //   {
+                //     setFormData(prev => ({ ...prev, editgoal: true, goal_id:goal.goal_id }))
+                // navigate("/form-elements")}}
+                className="rounded-md bg-yellow-500 px-3 py-1 text-sm font-medium text-white hover:bg-yellow-600 transition"
+                >
+                Edit
+                </button>
               </TableCell>
+              
               </TableRow>
             ))}
           </TableBody>

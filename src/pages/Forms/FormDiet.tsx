@@ -37,7 +37,7 @@ export default function Formdiet() {
     { value: "Female", text: "Female" },
   ];
 
-  const exercisesOptions = [
+  const Goal_diet = [
     { value: "FAT_LOSS", text: "Weight Loss / Fat Loss (Reduce body fat)" },
     { value: "MAINTENANCE", text: "Weight Maintenance (Maintain current weight)" },
     { value: "MUSCLE_GAIN", text: "Muscle Gain / Bulking (Increase muscle mass)" },
@@ -247,7 +247,7 @@ export default function Formdiet() {
         <div className = "relative z-52">
         <MultiSelect
           label="Select Goal diet"
-          options={exercisesOptions}
+          options={Goal_diet}
           onChange={(values) =>
             setinfo(prev => ({ ...prev, goaldiet: values[0] }))
           }

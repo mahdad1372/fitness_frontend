@@ -8,21 +8,23 @@ import {
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import Badge from "../../ui/badge/Badge";
-
-
+import { useWorkout } from "../../../context/WorkoutContext";
+import { useNavigate } from "react-router-dom";
 interface HealthMetric {
   id: number;
   user_id: number;
   cholesterol: number;
   blood_pressure: string;
   heart_rate: number;
+  createdAt:string;
 }
 
 
 export default function Healthmetrics() {
+  const navigate = useNavigate();
   const [health, setHealth] = useState<HealthMetric[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { formData, setFormData, startWorkout } = useWorkout();
   const fetchHealthMetrics = async () => {
     try {
       const token = Cookies.get("token");
@@ -51,7 +53,7 @@ export default function Healthmetrics() {
       }
 
       const data = await response.json();
-      console.log(data)
+
       // Non-admin usually gets a single object → normalize to array
       setHealth(data);
     } catch (error) {
@@ -81,7 +83,7 @@ export default function Healthmetrics() {
 
     try {
       const response = await fetch(
-        `http://localhost:7000/health_metric/${id}`,
+        `http://localhost:7000/health_metric/deletehealth/${id}`,
         {
           method: "DELETE",
           headers: {
@@ -105,7 +107,7 @@ export default function Healthmetrics() {
   if (loading) {
     return <div className="p-5">Loading...</div>;
   }
-console.log(health[0])
+
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
       <div className="max-w-full overflow-x-auto">
@@ -147,6 +149,12 @@ console.log(health[0])
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
+                Created at
+              </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
                 Actions
               </TableCell>
             </TableRow>
@@ -177,13 +185,25 @@ console.log(health[0])
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {health.heart_rate}
                 </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                  {health.createdAt.split("T")[0]}
+                </TableCell>
                 <TableCell className="px-4 py-3 text-start">
               
                 <button
-                onClick={() => handleDeleteUser(health.id)}
+                onClick={() => handleDeleteMetric(health.id)}
                 className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition"
                 >
                 Delete
+                </button>
+                <button
+                onClick={() => 
+                  {
+                setFormData(prev => ({ ...prev, edithealthmetric: true, health_id:health.id}))
+                navigate("/form-elements")}}
+                className="rounded-md bg-yellow-500 px-3 py-1 text-sm font-medium text-white hover:bg-yellow-600 transition ml-3"
+                >
+                Edit
                 </button>
               </TableCell>
               </TableRow>

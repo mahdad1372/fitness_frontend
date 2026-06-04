@@ -102,7 +102,7 @@ export default function MonthlySalesChart() {
         try {
           const id = Cookies.get("userId"); // 👈 cookie name "token"
   
-          const response = await fetch(`http://localhost:7000/foods/${id}`, {
+          const response = await fetch(`http://localhost:7000/foods/food_user_id/${id}`, {
             method: "GET"
           });
   
