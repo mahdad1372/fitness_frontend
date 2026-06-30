@@ -25,14 +25,19 @@ export default function UserAddressCard() {
     
 useEffect(() => {
   const userId = Cookies.get("userId");
-
+  const token = Cookies.get("token");   
   if (!userId) {
     console.error("No userId found in cookies");
     return;
   }
 
-  fetch(`http://localhost:7000/users/${userId}`)
-    .then((res) => {
+  fetch(`http://localhost:7000/users/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  }).then((res) => {
       if (!res.ok) {
         throw new Error("Failed to fetch user");
       }

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-
+const userId = Cookies.get("userId");
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }
@@ -22,14 +22,19 @@ export default function UserDropdown() {
   });
   useEffect(() => {
     const userId = Cookies.get("userId");
-  
+  const token = Cookies.get("token");  
     if (!userId) {
       console.error("No userId found in cookies");
       return;
     }
   
-    fetch(`http://localhost:7000/users/${userId}`)
-      .then((res) => {
+  fetch(`http://localhost:7000/users/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  }).then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch user");
         }
@@ -166,6 +171,12 @@ export default function UserDropdown() {
         </ul>
         <Link
           to="/signin"
+            onClick={() => {
+              Cookies.set("user", "null");
+            Cookies.set("userId", "null");
+            Cookies.set("token", "null");
+            Cookies.set("userrole", "null");
+            }}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg

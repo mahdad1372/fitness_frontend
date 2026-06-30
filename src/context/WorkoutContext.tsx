@@ -7,12 +7,16 @@ export type WorkoutScheduleItem = {
   Reps: string;
   status: string;
 };
-
+interface ChatMessage {
+sender: string;
+content?: string;
+  type: "CHAT" | "JOIN" | "LEAVE" | "FULL";
+}
 type WorkoutData = {
   user_id: number;
   type: string[];
   exercises: string[];
-
+  messages:ChatMessage[];
   gym_Scheduale: WorkoutScheduleItem[];
 
   rest_seconds: number;
@@ -35,12 +39,21 @@ type WorkoutData = {
   editfood:boolean,
   editgoal:boolean,
   edituser:boolean,
+  activechat:boolean,
   edithealthmetric:boolean,
   editworkout:boolean,
   food_id:number,
   goal_id:number,
   health_id:number,
-  workout_id:number
+  workout_id:number,
+  displaywaitlist:boolean,
+  idchatroom:number,
+  displaynotification:boolean,
+  chatroomfree:boolean,
+  chatroomnumber:number,
+  chatroom__free:boolean,
+  chatroom_id_number:number,
+  waiting_list:boolean
 };
 
 type WorkoutContextType = {
@@ -62,9 +75,8 @@ export const WorkoutProvider = ({
     user_id: 0,
     type: [],
     exercises: [],
-
+    messages:[],
     gym_Scheduale: [],
-
     Exerciseaimtype: "",
     rest_seconds: 0,
     rpe: 0,
@@ -81,6 +93,7 @@ export const WorkoutProvider = ({
     muscle_size: 0,
     deadlift: 0,
     day_scheduale: "",
+    activechat:false,
     consume_gym_scheduale: false,
     editfood:false,
     editgoal:false,
@@ -90,7 +103,15 @@ export const WorkoutProvider = ({
     workout_id:0,
     goal_id:0,
     food_id:0,
-    health_id:0
+    health_id:0,
+    displaywaitlist:false,
+    idchatroom:0,
+    displaynotification:false,
+    chatroomfree:false,
+    chatroomnumber:0,
+    chatroom__free:false,
+    chatroom_id_number:0,
+    waiting_list:false
   });
 
   const startWorkout = () => {

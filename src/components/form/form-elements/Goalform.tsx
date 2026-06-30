@@ -6,11 +6,16 @@ import Cookies from "js-cookie";
 import DatePicker from "../date-picker.tsx";
 import { useWorkout } from "../../../context/WorkoutContext";
 import { useNavigate } from "react-router-dom";
+import Dropzone from "./DropZone.tsx";
 export default function DefaultInputs() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
-const { formData, setFormData, startWorkout } = useWorkout();
+  const [beforeFile, setBeforeFile] = useState<File | null>(null);
+  const [afterFile, setAfterFile] = useState<File | null>(null);
+  const [beforeImageUrl, setBeforeImageUrl] = useState<string | null>(null);
+const [afterImageUrl, setAfterImageUrl] = useState<string | null>(null);
+  const { formData, setFormData, startWorkout } = useWorkout();
   const [formData2, setFormData2] = useState({
     user_id: 0,
     goal_type: "",
@@ -22,23 +27,29 @@ const { formData, setFormData, startWorkout } = useWorkout();
   });
 useEffect(() => {
   if (formData.editgoal === true) {
-fetch(`http://localhost:7000/goals/${formData.goal_id}`)
-  .then((response) => response.json())
-  .then((data) => {
+    fetch(`http://localhost:7000/goals/${formData.goal_id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        const goal = data[0];
+        console.log(data)
+        setFormData2({
+          user_id: data.user_id,
+          goal_type: data.goal_type,
+          target_value: data.target_value,
+          current_value: data.current_value,
+          start_date: data.start_date,
+          end_date: data.end_date,
+          status: data.status,
+        });
 
+        setBeforeImageUrl(
+          `http://localhost:7000/goals/before-image/${data.goal_id}`
+        );
 
-    const goal = data[0];
-
-    setFormData2((prev) => ({
-      ...prev,
-      goal_type: goal.goal_type,
-      target_value: goal.target_value,
-      current_value: goal.current_value,
-      start_date: goal.start_date,
-      end_date: goal.end_date,
-      status: goal.status,
-    }));
-  });
+        setAfterImageUrl(
+          `http://localhost:7000/goals/after-image/${data.goal_id}`
+        );
+      });
   }
 
   setLoading(false);
@@ -95,50 +106,101 @@ const handleDateChange = (id: string, date: Date | Date[] | string | null) => {
   }));
 };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-if(formData.editgoal == true){
-   await fetch(`http://localhost:7000/goals/updategoal/${formData.goal_id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData2),
-      });
-    setFormData(prev => ({ ...prev, editgoal: false, }))
-    navigate("/goal-tables")
-}
-else{
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+if (formData.editgoal === true) {
+
+ const data = new FormData();
+
+  data.append("user_id", String(formData2.user_id));
+  data.append("goal_type", formData2.goal_type);
+  data.append("target_value", String(formData2.target_value));
+  data.append("current_value", String(formData2.current_value));
+  data.append("start_date", formData2.start_date);
+  data.append("end_date", formData2.end_date);
+  data.append("status", formData2.status);
+
+  if (beforeFile) {
+    data.append("before_goal_image", beforeFile);
+  }
+
+  if (afterFile) {
+    data.append("after_goal_image", afterFile);
+  }
+
+  const response = await fetch(
+    `http://localhost:7000/goals/updategoal/${formData.goal_id}`,
+    {
+      method: "PUT",
+      body: data,
+    }
+  );
+
+  if (response.ok) {
+    alert("Goal updated successfully!");
+
+    setFormData(prev => ({
+      ...prev,
+      editgoal: false,
+    }));
+
+    navigate("/goal-tables");
+  }
+} else {
     try {
-      const response = await fetch("http://localhost:7000/goals/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData2),
-      });
+      const data = new FormData();
+
+      data.append("user_id", String(formData2.user_id));
+      data.append("goal_type", formData2.goal_type);
+      data.append("target_value", String(formData2.target_value));
+      data.append("current_value", String(formData2.current_value));
+      data.append("start_date", formData2.start_date);
+      data.append("end_date", formData2.end_date);
+      data.append("status", formData2.status);
+
+      if (beforeFile) {
+        data.append("before_goal_image", beforeFile);
+      }
+
+      if (afterFile) {
+        data.append("after_goal_image", afterFile);
+      }
+
+      const response = await fetch(
+        "http://localhost:7000/goals/add",
+        {
+          method: "POST",
+          body: data,
+        }
+      );
 
       if (response.ok) {
-        alert("goal added successfully!");
-        setFormData2(prev => ({
-          ...prev,
-          user_id: 0,
+        alert("Goal added successfully!");
+
+        setFormData2({
+          user_id: userId || 0,
           goal_type: "",
           target_value: 0,
           current_value: 0,
-          start_date:"",
-          end_date:"",
+          start_date: "",
+          end_date: "",
           status: "",
-        }));
+        });
+
+        setBeforeFile(null);
+        setAfterFile(null);
       } else {
-        alert("Error adding foods.");
+        const error = await response.text();
+        console.log(error);
+        alert("Error adding goal");
       }
     } catch (error) {
-      console.error("Connection error:", error);
+      console.error(error);
+      alert("Connection error");
     }
-}
-
-  };
+  }
+};
 
 
   if (loading) return null;
@@ -206,6 +268,13 @@ else{
             />
           </div>
         </div>
+<Dropzone
+  setBeforeFile={setBeforeFile}
+  setAfterFile={setAfterFile}
+  beforeImageUrl={beforeImageUrl}
+  afterImageUrl={afterImageUrl}
+/>
+
         <div className="pt-4">
           <button
             type="submit"

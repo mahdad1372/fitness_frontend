@@ -31,15 +31,27 @@ export default function Foods() {
   const fetchFoods = async () => {
     try {
       const token = Cookies.get("token");
-      const userRole = Cookies.get("userrole");
+     
       const userId = Cookies.get("userId");
 
       if (!token) {
         throw new Error("Unauthorized");
       }
 
-      const url =
-        userRole === "ADMIN"
+      const role = await fetch("http://localhost:7000/users/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!role.ok) {
+        throw new Error("Failed to fetch foods");
+      }else{
+        const Role = await role.json();
+        const url =
+        Role.role === "ADMIN"
           ? "http://localhost:7000/foods/all"
           : `http://localhost:7000/foods/food_user_id/${userId}`;
 
@@ -50,14 +62,13 @@ export default function Foods() {
           "Content-Type": "application/json",
         },
       });
-
       if (!response.ok) {
         throw new Error("Failed to fetch foods");
       }
-
       const data = await response.json();
 
-      setFoods(userRole === "ADMIN" ? data : Array.isArray(data) ? data : [data]);
+      setFoods(Role.role === "ADMIN" ? data : Array.isArray(data) ? data : [data]);
+      }
     } catch (error) {
       console.error("Error fetching foods:", error);
     } finally {

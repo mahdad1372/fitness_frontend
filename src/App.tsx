@@ -25,6 +25,9 @@ import FormMealConsume from "./pages/Forms/FormMealConsume";
 import Formweight from "./pages/Forms/Form_evaluation_diet";
 import FormGym from "../src/pages/Forms/FormGym";
 import ForTrainingGym from "./pages/Forms/FormTrainingGym";
+import ChatBox from "./components/Chats/ChatBox";
+import Waiting_list from "./components/Chats/waiting_list";
+import Servicetables from "./pages/Tables/ServiceTables";
 export default function App() {
   return (
     <>
@@ -40,6 +43,7 @@ export default function App() {
             <Route path="/form-elements" element={<FormElements />} />
             <Route path="/workouts-tables" element={<Worksouttable />} />
             <Route path="/basic-tables" element={<BasicTables />} />
+            <Route path="/service-tables" element={<Servicetables />} />
             <Route path="/health-tables" element={<HealthmetricsTabls />} />
             <Route path="/goal-tables" element={<GoalTables />} />
             <Route path="/food-tables" element={<FoodTables />} />
@@ -53,6 +57,8 @@ export default function App() {
             <Route path="/traininggym" element={<ForTrainingGym/>}/>
             <Route path="/line-chart" element={<LineChart />} />
             <Route path="/bar-chart" element={<BarChart />} />
+            <Route path="/chatbox" element={<ChatBox />} />
+            <Route path="/Waitinglist" element={<Waiting_list />} />
           </Route>
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />

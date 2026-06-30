@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-
+import Cookies from "js-cookie";
 // Assume these icons are imported from an icon library
 import {
   BoxCubeIcon,
@@ -17,7 +17,16 @@ import {
 } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import SidebarWidget from "./SidebarWidget";
-
+import { useWorkout } from "../context/WorkoutContext";
+import ChatBox from "../components/Chats/ChatBox";
+import Services from "../components/tables/BasicTables/Services";
+interface Service {
+  cart_item: string;
+  price:number;
+  coach_id:number;
+  user_id:number;
+  cartId:number;
+}
 type NavItem = {
   name: string;
   icon: React.ReactNode;
@@ -25,57 +34,6 @@ type NavItem = {
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
 
-const navItems: NavItem[] = [
-  {
-    icon: <GridIcon />,
-    name: "Dashboard",
-    subItems: [{ name: "Fitness", path: "/", pro: false }],
-  },
-  // {
-  //   icon: <CalenderIcon />,
-  //   name: "Calendar",
-  //   path: "/calendar",
-  // },
-  {
-    icon: <UserCircleIcon />,
-    name: "User Profile",
-    path: "/profile",
-  },
-  {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Fitness Elements", path: "/form-elements", pro: false }],
-  },
-  {
-    name: "Tables",
-    icon: <TableIcon />,
-    subItems: [{ name: "Users tables", path: "/basic-tables", pro: false },
-      { name: "Workouts tables", path: "/workouts-tables", pro: false },
-    { name: "Health metrics tables", path: "/health-tables", pro: false },
-   { name: "Goal tables", path: "/goal-tables", pro: false },
-  { name: "food tables", path: "/food-tables", pro: false }],
-  },
-    {
-    name: "Gym exercise",
-     icon: <TableIcon />,
-    subItems: [
-      { name: "Add gym exercise", path: "/addworkouts", pro: false },
-      { name: "Track gym exercise", path: "/trackworkouts", pro: false },
-    ],
-  }, {
-    name: "Diet",
-     icon: <TableIcon />,
-    subItems: [
-      { name: "Add Diet", path: "/adddiet", pro: false },
-    ],
-  }, {
-    name: "Gym scheduale",
-     icon: <TableIcon />,
-    subItems: [
-      { name: "Add Gym Scheduale", path: "/addgymscheduale", pro: false },
-    ],
-  }
-];
 
 const othersItems: NavItem[] = [
   // {
@@ -109,6 +67,92 @@ const othersItems: NavItem[] = [
 ];
 
 const AppSidebar: React.FC = () => {
+const [services, setservices] = useState<Service[]>([]);
+const { formData, setFormData, startWorkout } = useWorkout();
+const [loading, setLoading] = useState(true);
+const [role,setrole] = useState("");
+const hasPrivateCoach = services.some(
+  (service) => service.cart_item === "PRIVATE COACH"
+);
+const hasPrivateDiet = services.some(
+  (service) => service.cart_item === "Diet scheduale"
+);
+const hasPrivateGymscheduale = services.some(
+  (service) => service.cart_item === "Gym scheduale"
+);
+const navItems: NavItem[] = [
+  {
+    icon: <GridIcon />,
+    name: "Dashboard",
+    subItems: [{ name: "Fitness", path: "/", pro: false }],
+  },
+  {
+    icon: <UserCircleIcon />,
+    name: "User Profile",
+    path: "/profile",
+  },
+  {
+    name: "Forms",
+    icon: <ListIcon />,
+    subItems: [{ name: "Fitness Elements", path: "/form-elements", pro: false }],
+  },
+  {
+    name: "Tables",
+    icon: <TableIcon />,
+    subItems: [{ name: "Users tables", path: "/basic-tables", pro: false },
+      { name: "Workouts tables", path: "/workouts-tables", pro: false },
+      { name: "Health metrics tables", path: "/health-tables", pro: false },
+      { name: "Goal tables", path: "/goal-tables", pro: false },
+      { name: "food tables", path: "/food-tables", pro: false },
+      { name: "Service tables", path: "/service-tables", pro: false }],
+  },
+    {
+    name: "Gym exercise",
+     icon: <TableIcon />,
+    subItems: [
+      { name: "Add gym exercise", path: "/addworkouts", pro: false },
+      { name: "Track gym exercise", path: "/trackworkouts", pro: false },
+    ],
+  }, 
+    ...(hasPrivateDiet
+    ? [
+      {
+        name: "Diet",
+        icon: <TableIcon />,
+        subItems: [
+            { name: "Add Diet", path: "/adddiet", pro: false },
+            ],
+      }
+      ]
+    : []),
+ ...(hasPrivateGymscheduale
+    ? [
+      {
+    name: "Gym scheduale",
+     icon: <TableIcon />,
+    subItems: [
+      { name: "Add Gym Scheduale", path: "/addgymscheduale", pro: false },
+    ],
+      }
+      ]
+    : []), 
+  ...((hasPrivateCoach || role === "COACH")
+    ? [
+        {
+          name: "Chat",
+          icon: <TableIcon />,
+          subItems: [
+            {
+              name: "Chat",
+              path: "/chatbox",
+              pro: false,
+            },
+          ],
+        },
+      ]
+    : []),
+];
+
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
 
@@ -126,7 +170,76 @@ const AppSidebar: React.FC = () => {
     (path: string) => location.pathname === path,
     [location.pathname]
   );
+  const fetchService = async () => {
+    try {
+      const token = Cookies.get("token");
+     
+      const userId = Cookies.get("userId");
 
+      if (!token) {
+        throw new Error("Unauthorized");
+      }
+
+      const role = await fetch("http://localhost:7000/users/me", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!role.ok) {
+        throw new Error("Failed to fetch foods");
+      }else{
+        const Role = await role.json();
+        setrole(Role.role);
+        const url = `http://localhost:7000/cart/findbyuserid/${userId}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch foods");
+      }
+      const data = await response.json();
+        if(Role.role === "COACH"){
+          setFormData(prev => ({ ...prev, chatroomnumber:userId}))
+        }else{
+          if(data.some((item: { cart_item: string; }) => item.cart_item === "PRIVATE COACH")){
+            const coachid = data.filter((item: { cart_item: string; }) => item.cart_item === "PRIVATE COACH")[0].coach_id
+            const url = `http://localhost:7000/chatroom/coach/${Number(coachid)}`;
+            const response = await fetch(url, {
+              method: "GET",
+              headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+          },
+          });
+          const datas = await response.json();
+          setFormData(prev => ({ ...prev, chatroom_id_number:datas[0].chatroom_id }))
+          console.log("update")
+          if(datas[0].user_id === null){
+            setFormData(prev => ({ ...prev, chatroom__free:true}))
+          }
+          setFormData(prev => ({ ...prev, chatroom__free:false}))
+            setFormData(prev => ({ ...prev, chatroomnumber:coachid}))
+          }
+        }
+      setservices(data);
+      }
+    } catch (error) {
+      console.error("Error fetching foods:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchService();
+  }, []);
   useEffect(() => {
     let submenuMatched = false;
     ["main", "others"].forEach((menuType) => {

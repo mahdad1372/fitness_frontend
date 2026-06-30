@@ -19,6 +19,7 @@ interface Goal {
   start_date: string;
   end_date: string;
   status: string;
+  display_in_main_page:number;
 }
 
 export default function Goals() {
@@ -166,6 +167,25 @@ export default function Goals() {
                 Status
               </TableCell>
               <TableCell
+               isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+              Before Image
+              </TableCell>
+
+              <TableCell
+              isHeader
+              className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+              After Image
+              </TableCell>
+            <TableCell
+              isHeader
+              className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+              Display in main page
+              </TableCell>
+              <TableCell
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
@@ -208,6 +228,31 @@ export default function Goals() {
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {goal.status}
+                </TableCell>
+                <TableCell className="px-4 py-3">
+  <img
+    src={`http://localhost:7000/goals/before-image/${goal.goal_id}`}
+    alt="Before Goal"
+    className="w-20 h-20 object-cover rounded-lg border"
+    onError={(e) => {
+      console.log(e)
+      e.currentTarget.style.display = "none";
+    }}
+  />
+</TableCell>
+
+                <TableCell className="px-4 py-3">
+                  <img
+                  src={`http://localhost:7000/goals/after-image/${goal.goal_id}`}
+                  alt="After Goal"
+                  className="w-20 h-20 object-cover rounded-lg border"
+                  onError={(e) => {
+                   e.currentTarget.style.display = "none";
+                 }}
+              />
+              </TableCell>
+                <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
+                  {goal.display_in_main_page === 0 ? "NO":"YES"}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-start">
               

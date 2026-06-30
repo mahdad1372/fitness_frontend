@@ -14,7 +14,7 @@ export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [loading, setLoading] = useState(false);
-
+  const [login, setlogin] = useState(false);
   const navigate = useNavigate();
 
   // 🔐 LOGIN HANDLER
@@ -55,9 +55,9 @@ export default function SignInForm() {
       });
       Cookies.set("userrole", data.user.role);
       console.log("Login success:", data);
-
-      // ✅ Redirect
-      navigate("/");
+      setlogin(true);
+ 
+    
 
     } catch (error) {
       console.error("Login error:", error.message);
@@ -138,11 +138,35 @@ export default function SignInForm() {
                 Forgot password?
               </Link>
             </div>
-
-            {/* Submit */}
-            <Button className="w-full" size="sm" disabled={loading}>
+           <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-700">
+                  {login === true ? "You have succefully login" :""}
+                </span>
+              </div>
+            </div>
+            {login === false ? <Button className="w-full" size="sm" disabled={loading}>
               {loading ? "Signing in..." : "Sign in"}
+            </Button> : 
+            <div>
+            <Button 
+            onClick={() => {
+            window.location.href = "http://localhost:3000";
+            }} className="w-full" size="sm" disabled={loading}>
+              Return back to home page
             </Button>
+            <Link
+                to="/"
+                className="text-sm text-brand-500"
+              >
+            <Button 
+              className="w-full mt-3" size="sm" disabled={loading}>
+              Open Dashboard
+            </Button>
+            </Link>
+            </div>
+            }
+
           </div>
         </form>
 

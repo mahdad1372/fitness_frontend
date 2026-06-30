@@ -25,14 +25,19 @@ export default function UserInfoCard() {
   });
 useEffect(() => {
   const userId = Cookies.get("userId");
-
+  const token = Cookies.get("token"); 
   if (!userId) {
     console.error("No userId found in cookies");
     return;
   }
 
-  fetch(`http://localhost:7000/users/${userId}`)
-    .then((res) => {
+  fetch(`http://localhost:7000/users/${userId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  }).then((res) => {
       if (!res.ok) {
         throw new Error("Failed to fetch user");
       }
@@ -81,14 +86,7 @@ useEffect(() => {
               </p>
             </div>
 
-            <div>
-              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Phone
-              </p>
-              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                +09 363 398 46
-              </p>
-            </div>
+            
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
