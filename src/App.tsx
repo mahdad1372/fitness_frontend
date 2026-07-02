@@ -24,10 +24,12 @@ import Formdiet from "./pages/Forms/FormDiet";
 import FormMealConsume from "./pages/Forms/FormMealConsume";
 import Formweight from "./pages/Forms/Form_evaluation_diet";
 import FormGym from "../src/pages/Forms/FormGym";
+import AIRecommendation from "../src/pages/Forms/AIRecommendation";
 import ForTrainingGym from "./pages/Forms/FormTrainingGym";
 import ChatBox from "./components/Chats/ChatBox";
 import Waiting_list from "./components/Chats/waiting_list";
 import Servicetables from "./pages/Tables/ServiceTables";
+import AIChatPage from "./pages/Chats/AIChatPage";
 export default function App() {
   return (
     <>
@@ -56,8 +58,10 @@ export default function App() {
             <Route path="/addgymscheduale" element={<FormGym/>}/>
             <Route path="/traininggym" element={<ForTrainingGym/>}/>
             <Route path="/line-chart" element={<LineChart />} />
+            <Route path="/getrecommend" element={<AIRecommendation />} />
             <Route path="/bar-chart" element={<BarChart />} />
             <Route path="/chatbox" element={<ChatBox />} />
+            <Route path="/aichat" element={<AIChatPage />} />
             <Route path="/Waitinglist" element={<Waiting_list />} />
           </Route>
           <Route path="/signin" element={<SignIn />} />

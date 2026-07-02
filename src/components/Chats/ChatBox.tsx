@@ -54,7 +54,6 @@ useEffect(() => {
       const role = Cookies.get("userrole");
        localStorage.setItem("turnNotified","No");
       if(formData.chatroom__free === true && role === "USER"){
-        console.log("api call")
           await fetch(
           `http://localhost:7000/waitingroom/deletewaitingroom/${Number(userId)}`,
           {
@@ -82,6 +81,7 @@ useEffect(() => {
   
       }else {
         if(formData.chatroom__free === false && role === "USER"){
+        setFormData(prev => ({ ...prev, waiting_list: false }))  
         navigate("/Waitinglist");
       }}
       if (!token || !userId) {
@@ -195,7 +195,6 @@ useEffect(() => {
     brokerURL: "ws://localhost:7000/ws",
     reconnectDelay: 5000,
     onConnect: () => {
-      console.log("Connected");
 
       setConnected(true);
 
@@ -269,9 +268,6 @@ useEffect(() => {
   setClient(stompClient);
 
   return () => {
-    console.log(
-      "Disconnecting WebSocket"
-    );
 
     stompClient.deactivate();
   };

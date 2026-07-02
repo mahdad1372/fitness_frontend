@@ -105,6 +105,12 @@ export default function Services() {
               >
                 Private coach
               </TableCell>
+              <TableCell
+                isHeader
+                className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+              >
+                AI Health Analysis
+              </TableCell>
             </TableRow>
           </TableHeader>
 
@@ -147,6 +153,18 @@ export default function Services() {
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                   {services.find((x)=>x.cart_item === "PRIVATE COACH") ? <button
+                className="rounded-md bg-yellow-500 px-3 py-1 text-sm font-medium text-white hover:bg-yellow-600 transition ml-3"
+                >
+                 ACTIVE
+                 </button>
+                 : <button
+                className="rounded-md bg-red-500 px-3 py-1 text-sm font-medium text-white hover:bg-red-600 transition ml-3"
+                >
+                 NOT ACTIVE
+                 </button>}
+                </TableCell>
+              <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {services.find((x)=>x.cart_item === "AI health analysis") ? <button
                 className="rounded-md bg-yellow-500 px-3 py-1 text-sm font-medium text-white hover:bg-yellow-600 transition ml-3"
                 >
                  ACTIVE

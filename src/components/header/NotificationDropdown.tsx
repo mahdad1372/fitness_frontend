@@ -21,6 +21,7 @@ const token = Cookies.get("token");
 useEffect(() => {
   const fetchNumberPeople = async () => {
     try {
+    
         const url = `http://localhost:7000/chatroom/${formData.chatroom_id_number}`;
         const response2 = await fetch(url, {
               method: "GET",
@@ -30,7 +31,8 @@ useEffect(() => {
           },
           });
           const datas = await response2.json();
-          const url_get = `http://localhost:7000/waitingroom/user/${userId}`;
+        
+          const url_get = `http://localhost:7000/waitingroom/chatroom/${formData.chatroom_id_number}`;
           const user_info_waiting = await fetch(url_get, {
               method: "GET",
               headers: {
@@ -38,23 +40,33 @@ useEffect(() => {
               "Content-Type": "application/json",
           },
           });
-          const user_waiting = await user_info_waiting.json();
+         const user_waiting = await user_info_waiting.json();
 
-          const isFree = datas.user_id == null || datas.user_id === Number(userId);
-          setFormData(prev => ({ ...prev, chatroom__free:isFree}))
-          console.log(notifications.length)
-          const alreadyNotified = localStorage.getItem("turnNotified");
-          if(datas.user_id == null && datas.user_id != Number(userId) && user_waiting.length > 0 && alreadyNotified !== "Yes" ){
-          
-           setNotifications(prev => [
-                "The coach is now available. It is your turn!",
-                ...prev,
-            ]);
-            setFormData(prev => ({ ...prev, displaynotification:true}))
-            setNotifying(true);
-            setIsOpen(true);
-            localStorage.setItem("turnNotified","Yes");
-          }
+// ✅ Move console.log inside a safety check
+if (user_waiting.length > 0) {
+  console.log(user_waiting[0].user_id);
+}
+
+const isFree = datas.user_id == null || datas.user_id === Number(userId);
+setFormData(prev => ({ ...prev, chatroom__free: isFree }));
+
+const alreadyNotified = localStorage.getItem("turnNotified");
+
+if (
+  datas.user_id == null &&
+  user_waiting.length > 0 &&
+  user_waiting[0].user_id === Number(userId) &&  // ✅ first in queue
+  alreadyNotified !== "Yes"
+) {
+  setNotifications(prev => [
+    "The coach is now available. It is your turn!",
+    ...prev,
+  ]);
+  setFormData(prev => ({ ...prev, displaynotification: true }));
+  setNotifying(true);
+  setIsOpen(true);
+  localStorage.setItem("turnNotified", "Yes");
+}
 
       // const response = await fetch(
       //   "http://localhost:7000/numberchatpeople"
@@ -92,6 +104,7 @@ useEffect(() => {
         //   "true"
         // );
       // }
+       
       console.log("ntification")
     } catch (error) {
       console.error(error);

@@ -7,10 +7,12 @@ import DatePicker from "../date-picker.tsx";
 import { useWorkout } from "../../../context/WorkoutContext";
 import { useNavigate } from "react-router-dom";
 import Dropzone from "./DropZone.tsx";
+import Dropzone2 from "./DropZone2.tsx";
 export default function DefaultInputs() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<number | null>(null);
+  const [userRole, setuserRole] = useState<string | null>(null);
   const [beforeFile, setBeforeFile] = useState<File | null>(null);
   const [afterFile, setAfterFile] = useState<File | null>(null);
   const [beforeImageUrl, setBeforeImageUrl] = useState<string | null>(null);
@@ -24,7 +26,11 @@ const [afterImageUrl, setAfterImageUrl] = useState<string | null>(null);
     start_date:"",
     end_date:"",
     status: "",
+    display_in_main_page:0,
+    description: ""
   });
+  console.log(formData2.start_date)
+  console.log(formData2.end_date)
 useEffect(() => {
   if (formData.editgoal === true) {
     fetch(`http://localhost:7000/goals/${formData.goal_id}`)
@@ -40,6 +46,8 @@ useEffect(() => {
           start_date: data.start_date,
           end_date: data.end_date,
           status: data.status,
+          display_in_main_page: data.display_in_main_page,
+          description: data.description
         });
 
         setBeforeImageUrl(
@@ -57,8 +65,12 @@ useEffect(() => {
   // Get userId from cookie
   useEffect(() => {
     const id = Cookies.get("userId");
+    const Role = Cookies.get("userrole");
     if (id) {
       setUserId(Number(id));
+    }
+    if(Role){
+      setuserRole(Role);
     }
     setLoading(false);
   }, []);
@@ -158,6 +170,10 @@ if (formData.editgoal === true) {
       data.append("start_date", formData2.start_date);
       data.append("end_date", formData2.end_date);
       data.append("status", formData2.status);
+      data.append("description", formData2.description);
+ if (userRole === "COACH") {
+  data.append("display_in_main_page", "1"); // ✅ always "1"
+}
 
       if (beforeFile) {
         data.append("before_goal_image", beforeFile);
@@ -166,7 +182,9 @@ if (formData.editgoal === true) {
       if (afterFile) {
         data.append("after_goal_image", afterFile);
       }
+      
 
+   
       const response = await fetch(
         "http://localhost:7000/goals/add",
         {
@@ -176,6 +194,25 @@ if (formData.editgoal === true) {
       );
 
       if (response.ok) {
+          if (userRole === "COACH") {
+    const token = Cookies.get("token");
+    const id = Cookies.get("userId");
+    const chatroomResponse = await fetch(
+      `http://localhost:7000/chatroom/create/${id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (chatroomResponse.ok) {
+      console.log("Chatroom created successfully");
+    } else {
+      console.log("Failed to create chatroom");
+    }
+  }
         alert("Goal added successfully!");
 
         setFormData2({
@@ -186,6 +223,8 @@ if (formData.editgoal === true) {
           start_date: "",
           end_date: "",
           status: "",
+          display_in_main_page: userRole === "COACH" ? 1 : 0,
+          description: "" 
         });
 
         setBeforeFile(null);
@@ -209,7 +248,10 @@ if (formData.editgoal === true) {
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="goal_type">goal_type</Label>
+            {userRole === "COACH" ? (
+            <Label htmlFor="goal_type">Coach specialist</Label>
+              ) : <Label htmlFor="goal_type">goal_type</Label>}
+            
             <Input
               type="text"
               name="goal_type"
@@ -218,7 +260,9 @@ if (formData.editgoal === true) {
               placeholder="goal_type"
             />
           </div>
-          <div>
+          {userRole != "COACH" ? (
+           <div>
+                   <div>
             <Label htmlFor="current_value">current_value</Label>
             <Input
               type="text"
@@ -236,6 +280,9 @@ if (formData.editgoal === true) {
               onChange={handleChange}
             />
           </div>
+          </div>
+) : null}
+
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -257,7 +304,8 @@ if (formData.editgoal === true) {
     handleDateChange("end_date", date)
   }
 />
-          <div>
+{userRole != "COACH" ? (
+           <div>
             <Label htmlFor="status">Status</Label>
             <Input
               type="text"
@@ -267,21 +315,48 @@ if (formData.editgoal === true) {
               placeholder="status"
             />
           </div>
+) : null}
+
+
         </div>
-<Dropzone
+        <div>
+  <Label htmlFor="description">Description</Label>
+  <Input
+    type="text"
+    name="description"
+    value={formData2.description}
+    onChange={handleChange}
+    placeholder="Enter goal description"
+  />
+</div>
+{userRole != "COACH" ? (
+  <Dropzone
+    setBeforeFile={setBeforeFile}
+    setAfterFile={setAfterFile}
+    beforeImageUrl={beforeImageUrl}
+    afterImageUrl={afterImageUrl}
+  />
+) : <Dropzone2
   setBeforeFile={setBeforeFile}
   setAfterFile={setAfterFile}
   beforeImageUrl={beforeImageUrl}
-  afterImageUrl={afterImageUrl}
-/>
+/>}
 
         <div className="pt-4">
+          {userRole != "COACH" ? (
           <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
           >
            {formData.editgoal === true ? "Edit Goal":"save goal"}
           </button>
+          ) :<button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors"
+          >
+           {formData.editgoal === true ? "Edit Coach details":"save Coach details"}
+          </button>}
+
         </div>
       </form>
     </ComponentCard>

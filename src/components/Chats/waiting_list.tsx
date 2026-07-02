@@ -11,6 +11,7 @@ export default function Waiting_list() {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [isInQueue, setIsInQueue] = useState(false);
   const [userId, setUserId] = useState<number | null>(null);
   const [ waitlist,setwaitlist] = useState(false);
   const [ chatroomfree,setchatroomfree] = useState(false);
@@ -109,7 +110,9 @@ useEffect(() => {
     const positions = results.findIndex(
       (  item: { user_id: number; }) => item.user_id === Number(user_Id));
       setpeoplewaiting(positions+1);
+   
     }
+  
     console.log(formData.chatroom__free)
     console.log(formData.chatroom_id_number)
    
@@ -184,6 +187,31 @@ const joinChatRoom = async () => {
 };
 const addWaitingRoom = async () => {
   try {
+    // First check if user is already in the queue
+    const checkResponse = await fetch(
+      `http://localhost:7000/waitingroom/chatroom/${formData.chatroom_id_number}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (checkResponse.ok) {
+      const waitingList = await checkResponse.json();
+      const alreadyInQueue = waitingList.some(
+        (item: { user_id: number }) => item.user_id === Number(user_Id)
+      );
+
+      if (alreadyInQueue) {
+        console.log("Already in queue, skipping add");
+        return; // ← stop here, don't add again
+      }
+    }
+
+    // Not in queue → add them
     const response = await fetch(
       "http://localhost:7000/waitingroom/addwaitingroom",
       {
@@ -200,9 +228,7 @@ const addWaitingRoom = async () => {
     );
 
     if (!response.ok) {
-      throw new Error(
-        `HTTP error! status: ${response.status}`
-      );
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     console.log("Added to waiting room");

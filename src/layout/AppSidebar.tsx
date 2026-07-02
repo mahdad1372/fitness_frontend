@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import Cookies from "js-cookie";
+
 // Assume these icons are imported from an icon library
 import {
   BoxCubeIcon,
@@ -36,26 +37,6 @@ type NavItem = {
 
 
 const othersItems: NavItem[] = [
-  // {
-  //   icon: <PieChartIcon />,
-  //   name: "Charts",
-  //   subItems: [
-  //     { name: "Line Chart", path: "/line-chart", pro: false },
-  //     { name: "Bar Chart", path: "/bar-chart", pro: false },
-  //   ],
-  // },
-  // {
-  //   icon: <BoxCubeIcon />,
-  //   name: "Chats",
-  //   subItems: [
-  //     { name: "Chats", path: "/alerts", pro: false },
-  //     // { name: "Avatar", path: "/avatars", pro: false },
-  //     // { name: "Badge", path: "/badge", pro: false },
-  //     // { name: "Buttons", path: "/buttons", pro: false },
-  //     // { name: "Images", path: "/images", pro: false },
-  //     // { name: "Videos", path: "/videos", pro: false },
-  //   ],
-  // },
   {
     icon: <PlugInIcon />,
     name: "Authentication",
@@ -67,6 +48,13 @@ const othersItems: NavItem[] = [
 ];
 
 const AppSidebar: React.FC = () => {
+    useEffect(() => {
+      const Role = Cookies.get("userrole");
+      if(Role){
+        setuserRole(Role);
+      }
+    }, []);
+const [userRole, setuserRole] = useState<string | null>(null);
 const [services, setservices] = useState<Service[]>([]);
 const { formData, setFormData, startWorkout } = useWorkout();
 const [loading, setLoading] = useState(true);
@@ -80,6 +68,9 @@ const hasPrivateDiet = services.some(
 const hasPrivateGymscheduale = services.some(
   (service) => service.cart_item === "Gym scheduale"
 );
+const hasAI= services.some(
+  (service) => service.cart_item === "AI health analysis"
+);
 const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
@@ -91,11 +82,14 @@ const navItems: NavItem[] = [
     name: "User Profile",
     path: "/profile",
   },
+  ...(userRole !== "ADMIN" ? [
   {
     name: "Forms",
     icon: <ListIcon />,
     subItems: [{ name: "Fitness Elements", path: "/form-elements", pro: false }],
-  },
+  }
+] : []),
+  
   {
     name: "Tables",
     icon: <TableIcon />,
@@ -106,6 +100,8 @@ const navItems: NavItem[] = [
       { name: "food tables", path: "/food-tables", pro: false },
       { name: "Service tables", path: "/service-tables", pro: false }],
   },
+      ...(role != "ADMIN" && role != "COACH"
+    ? [
     {
     name: "Gym exercise",
      icon: <TableIcon />,
@@ -113,8 +109,27 @@ const navItems: NavItem[] = [
       { name: "Add gym exercise", path: "/addworkouts", pro: false },
       { name: "Track gym exercise", path: "/trackworkouts", pro: false },
     ],
-  }, 
-    ...(hasPrivateDiet
+  }
+      ]
+    : []),
+      ...(hasAI && role != "ADMIN"
+    ? [
+   {
+    name: "AI Body analysis",
+     icon: <TableIcon />,
+    subItems: [
+      { name: "Get Recommendation", path: "/getrecommend", pro: false },
+    ],
+  }, {
+    name: "AI Chat",
+     icon: <TableIcon />,
+    subItems: [
+      { name: "Coach chat AI", path: "/aichat", pro: false },
+    ],
+  }
+      ]
+    : []),
+    ...(hasPrivateDiet && role != "ADMIN" && role != "COACH"
     ? [
       {
         name: "Diet",
@@ -125,7 +140,7 @@ const navItems: NavItem[] = [
       }
       ]
     : []),
- ...(hasPrivateGymscheduale
+ ...(hasPrivateGymscheduale && role != "ADMIN" && role != "COACH"
     ? [
       {
     name: "Gym scheduale",
