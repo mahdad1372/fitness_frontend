@@ -630,25 +630,25 @@ const calculate_macros = ()=>{
             actual vs target
             </h4>
             <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-            Calories -- {finalcholestrol.toFixed(2)} kcal / {formData.calories.toFixed(2)} kcal -- 
-            Adherence score is : {adherence_score(finalcholestrol,formData.calories).toFixed(2)}
+            Calories : {finalcholestrol.toFixed(2)} kcal / {formData.calories.toFixed(2)} kcal ,
+            Adherence score is : {adherence_score(finalcholestrol,formData.calories).toFixed(2)} %
            
             </p>
             <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-             Carbohydrates -- {finalcharbohyrdate.toFixed(2)} gr / {formData.carbohydrates.toFixed(2)} gr -- 
-            Adherence score is : {adherence_score(finalcharbohyrdate,formData.carbohydrates).toFixed(2)}
+             Carbohydrates : {finalcharbohyrdate.toFixed(2)} gr / {formData.carbohydrates.toFixed(2)} gr ,
+            Adherence score is : {adherence_score(finalcharbohyrdate,formData.carbohydrates).toFixed(2)} %
             </p>
              <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-            Protein -- {finalprotein.toFixed(2)} gr / {formData.protein.toFixed(2)} gr -- 
-            Adherence score is : {adherence_score(finalprotein,formData.protein).toFixed(2)}
+            Protein : {finalprotein.toFixed(2)} gr / {formData.protein.toFixed(2)} gr , 
+            Adherence score is : {adherence_score(finalprotein,formData.protein).toFixed(2)} %
             </p>
             <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-            fats -- {finalfat.toFixed(2)} gr/ {formData.fats.toFixed(2)} gr -- 
-            Adherence score is : {adherence_score(finalfat,formData.fats).toFixed(2)}
+            fats : {finalfat.toFixed(2)} gr/ {formData.fats.toFixed(2)} gr , 
+            Adherence score is : {adherence_score(finalfat,formData.fats).toFixed(2)} %
             </p>
                       
            <p className="mb-6 text-lg text-gray-500 dark:text-gray-400 lg:mb-7">
-            Final adherence is this -- {average_adherence(
+            Final adherence is this : {average_adherence(
               Number(adherence_score(finalcharbohyrdate,formData.carbohydrates).toFixed(2))
             ,Number(adherence_score(finalprotein,formData.protein).toFixed(2)),
             Number(adherence_score(finalcholestrol,formData.calories).toFixed(2)),

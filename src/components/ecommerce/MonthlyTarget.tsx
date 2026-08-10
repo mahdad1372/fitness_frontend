@@ -10,6 +10,25 @@ export default function MonthlyTarget() {
   const [bmi, setBmi] = useState<number>(0);
   const [statusbmi, setStatusBmi] = useState<string>("");
   const { formData, setFormData, startWorkout } = useWorkout();
+    useEffect(() => {
+      const fetchBMI = async () => {
+        try {
+          const userId = Cookies.get("userId"); // get userId from cookies
+          if (!userId) return;
+  
+          const response = await fetch(`http://localhost:7000/users/bmi/${userId}`);
+          if (!response.ok) throw new Error("Failed to fetch BMI");
+  
+          const data = await response.json();
+          setBmi(data.bmi);
+          setStatusBmi(data.status);
+        } catch (error) {
+          console.error("Error fetching BMI:", error);
+        }
+      };
+  
+      fetchBMI();
+    }, []);
   useEffect(() => {
     const fetchBMI = async () => {
 

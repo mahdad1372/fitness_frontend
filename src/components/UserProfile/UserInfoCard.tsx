@@ -9,7 +9,6 @@ export default function UserInfoCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const handleSave = () => {
     // Handle save logic here
-    console.log("Saving changes...");
     closeModal();
   };
 
@@ -22,6 +21,8 @@ export default function UserInfoCard() {
     weight: "",
     height: "",
     role: "",
+    age:"",
+    smoke:""
   });
 useEffect(() => {
   const userId = Cookies.get("userId");
@@ -85,15 +86,45 @@ useEffect(() => {
                  {formData.email}
               </p>
             </div>
-
-            
-
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Bio
+                Role
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                  {formData.role}
+              </p>
+            </div>
+
+             <div>
+              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                Weight
+              </p>
+              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                 {formData.weight} kg
+              </p>
+            </div>
+            <div>
+              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                Height
+              </p>
+              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                 {formData.height} m
+              </p>
+            </div>
+            <div>
+              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                Age
+              </p>
+              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                  {formData.age}
+              </p>
+            </div>
+            <div>
+              <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
+                smoke
+              </p>
+              <p className="text-sm font-medium text-gray-800 dark:text-white/90">
+                 {formData.smoke === 1 ? "Yes" : "No"}
               </p>
             </div>
           </div>
