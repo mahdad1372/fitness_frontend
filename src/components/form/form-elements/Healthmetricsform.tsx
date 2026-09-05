@@ -16,8 +16,8 @@ const { formData, setFormData, startWorkout } = useWorkout();
   const [formData2, setFormData2] = useState({
     user_id: 0,
     cholesterol: 0,
-    blood_pressure: 0,
-    heart_rate: 0,
+    body_temperature: 0,
+    spo2: 0,
   });
 useEffect(() => {
   if (formData.edithealthmetric === true) {
@@ -33,8 +33,8 @@ fetch(`http://localhost:7000/health_metric/findbyhealth_id/${formData.health_id}
       ...prev,
       user_id: health.user_id,
     cholesterol: health.cholesterol,
-    blood_pressure: health.blood_pressure,
-    heart_rate: health.heart_rate,
+    body_temperature: health.body_temperature,
+    spo2: health.spo2,
     }));
   });
   }
@@ -100,8 +100,8 @@ if(formData.edithealthmetric === true){
         setFormData2(prev => ({
           ...prev,
          cholesterol: 0,
-        blood_pressure: 0,
-        heart_rate: 0,
+        body_temperature: 0,
+        spo2: 0,
         }));
       } else {
         alert("Error adding workout.");
@@ -132,11 +132,11 @@ if(formData.edithealthmetric === true){
           </div>
 
           <div>
-            <Label htmlFor="blood_pressure">blood_pressure</Label>
+            <Label htmlFor="body_temperature">body_temperature</Label>
             <Input
               type="number"
-              name="blood_pressure"
-              value={formData2.blood_pressure}
+              name="body_temperature"
+              value={formData2.body_temperature}
               onChange={handleChange}
             />
           </div>
@@ -144,11 +144,11 @@ if(formData.edithealthmetric === true){
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Label htmlFor="heart_rate">heart_rate</Label>
+            <Label htmlFor="spo2">spo2</Label>
             <Input
               type="number"
-              name="heart_rate"
-              value={formData2.heart_rate}
+              name="spo2"
+              value={formData2.spo2}
               onChange={handleChange}
             />
           </div>

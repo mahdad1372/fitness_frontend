@@ -14,8 +14,8 @@ interface HealthMetric {
   id: number;
   user_id: number;
   cholesterol: number;
-  blood_pressure: string;
-  heart_rate: number;
+  body_temperature: string;
+  spo2: number;
   createdAt:string;
 }
 
@@ -137,13 +137,13 @@ export default function Healthmetrics() {
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                blood_pressure
+                body_temperature
               </TableCell>
               <TableCell
                 isHeader
                 className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
               >
-                heart_rate
+                spo2
               </TableCell>
               <TableCell
                 isHeader
@@ -180,10 +180,10 @@ export default function Healthmetrics() {
                   {health.cholesterol}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                    {health.blood_pressure}
+                    {health.body_temperature}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
-                  {health.heart_rate}
+                  {health.spo2}
                 </TableCell>
                 <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400">
                   {health.createdAt.split("T")[0]}

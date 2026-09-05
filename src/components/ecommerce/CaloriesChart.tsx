@@ -101,7 +101,7 @@ export default function CaloriesChart() {
       const fetchfoods= async () => {
         try {
           const id = Cookies.get("userId"); // 👈 cookie name "token"
-          console.log(id)
+    
           const response = await fetch(`http://localhost:7000/foods/food_user_id/${id}`, {
             method: "GET"
           });
@@ -119,7 +119,7 @@ export default function CaloriesChart() {
           }));
           
           setfoods(proteinWithDayName);
-          console.log(proteinWithDayName)
+  
         } catch (error) {
           console.error("Error fetching users:", error);
         } finally {
@@ -129,7 +129,6 @@ export default function CaloriesChart() {
     useEffect(() => {
       fetchfoods();
     }, []);
-console.log(foods)
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">

@@ -47,8 +47,6 @@ const calledRef = useRef(false);
 useEffect(() => {
   const initializeChat = async () => {
     try {
-      console.log(formData.chatroom_id_number)
-       console.log(formData.chatroom__free)
       const token = Cookies.get("token");
       const userId = Cookies.get("userId");
       const role = Cookies.get("userrole");
@@ -189,7 +187,6 @@ useEffect(() => {
       ...prev,
       activechat: true,
     }));
-      console.log("add user")
   }
   const stompClient = new Client({
     brokerURL: "ws://localhost:7000/ws",

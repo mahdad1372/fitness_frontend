@@ -12,7 +12,7 @@ export default function MonthlyTarget() {
   useEffect(() => {
     const fetchBMI = async () => {
       try {
-        const userId = Cookies.get("userId"); // get userId from cookies
+        const userId = Cookies.get("userId"); 
         if (!userId) return;
 
         const response = await fetch(`http://localhost:7000/users/bmi/${userId}`);

@@ -13,7 +13,7 @@ class WebSocketService {
       reconnectDelay: 5000,
 
       onConnect: () => {
-        console.log("Connected to websocket");
+      
 
         this.client?.subscribe(
           "/topic/public",

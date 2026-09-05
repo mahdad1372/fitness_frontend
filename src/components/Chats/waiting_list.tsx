@@ -113,8 +113,7 @@ useEffect(() => {
    
     }
   
-    console.log(formData.chatroom__free)
-    console.log(formData.chatroom_id_number)
+
    
       // const waitlist = await fetch(
       //   "http://localhost:7000/getwaitinglist"
@@ -131,7 +130,7 @@ useEffect(() => {
       // if (index !== -1) {
       //   setpeoplewaiting(index + 1);
       // }
-      console.log("waiting")
+    
     } catch (error) {
       console.error(error);
     }
@@ -206,7 +205,7 @@ const addWaitingRoom = async () => {
       );
 
       if (alreadyInQueue) {
-        console.log("Already in queue, skipping add");
+
         return; // ← stop here, don't add again
       }
     }
@@ -231,7 +230,7 @@ const addWaitingRoom = async () => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
 
-    console.log("Added to waiting room");
+
   } catch (error) {
     console.error(error);
   }
