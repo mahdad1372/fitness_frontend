@@ -18,7 +18,7 @@ type WorkoutData = {
   exercises: string[];
   messages:ChatMessage[];
   gym_Scheduale: WorkoutScheduleItem[];
-
+  equipmentReservationMessage: string | null;
   rest_seconds: number;
   rpe: number;
   sets: number;
@@ -75,6 +75,8 @@ export const WorkoutProvider = ({
     user_id: 0,
     type: [],
     exercises: [],
+    waiting_list: false,
+    equipmentReservationMessage: null,
     messages:[],
     gym_Scheduale: [],
     Exerciseaimtype: "",

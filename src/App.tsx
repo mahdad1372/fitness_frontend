@@ -30,6 +30,13 @@ import ChatBox from "./components/Chats/ChatBox";
 import Waiting_list from "./components/Chats/waiting_list";
 import Servicetables from "./pages/Tables/ServiceTables";
 import AIChatPage from "./pages/Chats/AIChatPage";
+import ExerciseLibrary from "./pages/ExerciseGraph/ExerciseLibrary";
+import FindSubstitute from "./pages/ExerciseGraph/FindSubstitute";
+import ProgressionRoadmap from "./pages/ExerciseGraph/ProgressionRoadmap";
+import SmartWeeklyPlanner from "./pages/WeeklyPlanner/SmartWeeklyPlanner";
+import SmartMealPlanner from "./pages/MealPlanner/SmartMealPlanner";
+import CardiovascularRiskPage from "./pages/CardiovascularRisk/CardiovascularRiskPage";
+import ResourceSchedulerPage from "./pages/ResourceScheduler/ResourceSchedulerPage";
 export default function App() {
   return (
     <>
@@ -42,11 +49,17 @@ export default function App() {
             <Route path="/profile" element={<UserProfiles />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/blank" element={<Blank />} />
+            <Route path="/cardiovascular-risk" element={<CardiovascularRiskPage />} />
+            <Route path="/exercise-library" element={<ExerciseLibrary />} />
+            <Route path="/find-substitute" element={<FindSubstitute />} />
+            <Route path="/progression-roadmap" element={<ProgressionRoadmap />} />
             <Route path="/form-elements" element={<FormElements />} />
             <Route path="/workouts-tables" element={<Worksouttable />} />
             <Route path="/basic-tables" element={<BasicTables />} />
+            <Route path="/smart-weekly-planner" element={<SmartWeeklyPlanner />} />
             <Route path="/service-tables" element={<Servicetables />} />
             <Route path="/health-tables" element={<HealthmetricsTabls />} />
+            <Route path="/smart-meal-planner" element={<SmartMealPlanner />} />
             <Route path="/goal-tables" element={<GoalTables />} />
             <Route path="/food-tables" element={<FoodTables />} />
             <Route path="/alerts" element={<Alerts />} />
@@ -63,6 +76,7 @@ export default function App() {
             <Route path="/chatbox" element={<ChatBox />} />
             <Route path="/aichat" element={<AIChatPage />} />
             <Route path="/Waitinglist" element={<Waiting_list />} />
+            <Route path="/resource-scheduler" element={<ResourceSchedulerPage />} />
           </Route>
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />

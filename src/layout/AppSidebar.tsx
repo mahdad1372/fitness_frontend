@@ -82,6 +82,13 @@ const navItems: NavItem[] = [
     name: "User Profile",
     path: "/profile",
   },
+  {
+  name: "Training Planner",
+  icon: <CalenderIcon />,
+  subItems: [
+    { name: "Smart Weekly Planner", path: "/smart-weekly-planner", pro: false },
+  ],
+},
   ...(userRole !== "ADMIN" ? [
   {
     name: "Forms",
@@ -89,6 +96,15 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Fitness Elements", path: "/form-elements", pro: false }],
   }
 ] : []),
+{
+  name: "Exercise Graph",
+  icon: <TableIcon />,
+  subItems: [
+    { name: "Exercise Library", path: "/exercise-library", pro: false },
+    { name: "Find Substitute", path: "/find-substitute", pro: false },
+    { name: "Progression Roadmap", path: "/progression-roadmap", pro: false },
+  ],
+},
 
   {
     name: "Tables",
@@ -108,18 +124,18 @@ const navItems: NavItem[] = [
             { name: "Service tables", path: "/service-tables", pro: false },
           ],
   },
-      ...(role != "ADMIN" && role != "COACH"
-    ? [
-    {
-    name: "Gym exercise",
-     icon: <TableIcon />,
-    subItems: [
-      { name: "Add gym exercise", path: "/addworkouts", pro: false },
-      { name: "Track gym exercise", path: "/trackworkouts", pro: false },
-    ],
-  }
-      ]
-    : []),
+  //     ...(role != "ADMIN" && role != "COACH"
+  //   ? [
+  //   {
+  //   name: "Gym exercise",
+  //    icon: <TableIcon />,
+  //   subItems: [
+  //     { name: "Add gym exercise", path: "/addworkouts", pro: false },
+  //     { name: "Track gym exercise", path: "/trackworkouts", pro: false },
+  //   ],
+  // }
+  //     ]
+  //   : []),
       ...(hasAI && role != "ADMIN"
     ? [
    {
@@ -136,7 +152,13 @@ const navItems: NavItem[] = [
     ],
   }
       ]
-    : []),
+    : []),{
+  name: "Nutrition",
+  icon: <PieChartIcon />,
+  subItems: [
+    { name: "Smart Meal Planner", path: "/smart-meal-planner", pro: false, new: true },
+  ],
+  },
     ...(hasPrivateDiet && role != "ADMIN" && role != "COACH"
     ? [
       {
@@ -148,17 +170,17 @@ const navItems: NavItem[] = [
       }
       ]
     : []),
- ...(hasPrivateGymscheduale && role != "ADMIN" && role != "COACH"
-    ? [
-      {
-    name: "Gym scheduale",
-     icon: <TableIcon />,
-    subItems: [
-      { name: "Add Gym Scheduale", path: "/addgymscheduale", pro: false },
-    ],
-      }
-      ]
-    : []),
+//  ...(hasPrivateGymscheduale && role != "ADMIN" && role != "COACH"
+//     ? [
+//       {
+//     name: "Gym scheduale",
+//      icon: <TableIcon />,
+//     subItems: [
+//       { name: "Add Gym Scheduale", path: "/addgymscheduale", pro: false },
+//     ],
+//       }
+//       ]
+//     : []),
   ...((hasPrivateCoach || role === "COACH")
     ? [
         {
@@ -168,6 +190,21 @@ const navItems: NavItem[] = [
             {
               name: "Chat",
               path: "/chatbox",
+              pro: false,
+            },
+          ],
+        },
+      ]
+    : []),
+  ...((hasPrivateCoach || role === "COACH")
+    ? [
+        {
+          name: "Scheduling",
+          icon: <CalenderIcon />,
+          subItems: [
+            {
+              name: "Trainer & Equipment Scheduler",
+              path: "/resource-scheduler",
               pro: false,
             },
           ],

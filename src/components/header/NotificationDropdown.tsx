@@ -12,12 +12,15 @@ export default function NotificationDropdown() {
   const { formData, setFormData, startWorkout } = useWorkout();
   const userId = Cookies.get("userId");
 const token = Cookies.get("token");
-// useEffect(() => {
-
-//     setNotifying(true);
-//     setIsOpen(true);
-  
-// });
+useEffect(() => {
+  if (!formData.equipmentReservationMessage) return;
+  setNotifications(prev => [
+    formData.equipmentReservationMessage as string,
+    ...prev,
+  ]);
+  setNotifying(true);
+  setIsOpen(true);
+}, [formData.equipmentReservationMessage]);
 useEffect(() => {
   const fetchNumberPeople = async () => {
     try {

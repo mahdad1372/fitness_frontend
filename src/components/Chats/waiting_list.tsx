@@ -138,7 +138,7 @@ useEffect(() => {
 
   fetchWaitingList();
 
-  const interval = setInterval(fetchWaitingList, 1000);
+  const interval = setInterval(fetchWaitingList, 3000);
 
   return () => clearInterval(interval);
 

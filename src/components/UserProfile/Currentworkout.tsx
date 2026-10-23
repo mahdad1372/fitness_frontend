@@ -58,7 +58,7 @@ let interval: ReturnType<typeof setInterval>;
   if (isRunning) {
     interval = setInterval(() => {
       setSeconds((prev) => prev + 1);
-    }, 1000);
+    }, 3000);
   }
 
   return () => clearInterval(interval);
@@ -69,7 +69,7 @@ useEffect(() => {
 
   const interval = setInterval(() => {
     setSeconds((prev) => prev + 1);
-  }, 1000);
+  }, 3000);
 
   return () => clearInterval(interval);
 }, [isRunning]);

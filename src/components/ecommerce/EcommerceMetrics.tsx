@@ -12,6 +12,12 @@ function randomInRange(min: number, max: number): number {
 }
 
 export default function EcommerceMetrics() {
+  // ---------- Role (used to gate cardiovascular card) ----------
+  // Adjust this if the role lives somewhere else (e.g. fetched from /users/:id
+  // instead of a cookie) — swap the line below for that source.
+  const userRole = Cookies.get("userrole") ?? "";
+  const isCoach = userRole.toUpperCase() === "COACH";
+
   // ---------- Blood pressure state ----------
   const [bpData, setBpData] = useState({
     averageSystolic: 0,
@@ -50,7 +56,6 @@ export default function EcommerceMetrics() {
       return Promise.resolve();
     }
 
-
     return fetch(`http://localhost:7000/users/${userId}`, {
       method: "GET",
       headers: {
@@ -77,40 +82,36 @@ export default function EcommerceMetrics() {
           return;
         }
 
-
-       
-
-        if(datastreambloodpressure === false){
-        return fetch(
-          `http://localhost:7000/google-fit/blood-pressure/datasource/${userId}`,
-          {
-            method: "POST",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-          .then(async (res) => {
-            const data = await res.json();
-
-            if (!res.ok) {
-              throw new Error(
-                `Failed to create blood pressure datasource: ${res.status} ${JSON.stringify(
-                  data
-                )}`
-              );
+        if (datastreambloodpressure === false) {
+          return fetch(
+            `http://localhost:7000/google-fit/blood-pressure/datasource/${userId}`,
+            {
+              method: "POST",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
             }
+          )
+            .then(async (res) => {
+              const data = await res.json();
 
-            return data;
-          })
-          .then((created) => {
-            console.log(
-              "Blood pressure datasource created successfully:",
-              created
-            );
-          });
+              if (!res.ok) {
+                throw new Error(
+                  `Failed to create blood pressure datasource: ${res.status} ${JSON.stringify(
+                    data
+                  )}`
+                );
+              }
+
+              return data;
+            })
+            .then((created) => {
+              console.log(
+                "Blood pressure datasource created successfully:",
+                created
+              );
+            });
         }
-
       });
   };
 
@@ -155,18 +156,12 @@ export default function EcommerceMetrics() {
         return data;
       })
       .then((data) => {
-        console.log(
-          "Blood pressure PATCH successful:",
-          data
-        );
+        console.log("Blood pressure PATCH successful:", data);
 
         setBpSaving(false);
       })
       .catch((err) => {
-        console.error(
-          "Error patching blood pressure:",
-          err
-        );
+        console.error("Error patching blood pressure:", err);
 
         setBpSaving(false);
 
@@ -174,10 +169,6 @@ export default function EcommerceMetrics() {
       });
   };
 
-  /**
-   * Fetch the current blood pressure data from the API
-   * and update the React state.
-   */
   const fetchBloodPressure = (): Promise<void> => {
     const userId = Cookies.get("userId");
     const token = Cookies.get("token");
@@ -214,8 +205,6 @@ export default function EcommerceMetrics() {
         return data;
       })
       .then((data) => {
-      
-
         setBpData({
           averageSystolic: data.averageSystolic ?? 0,
           averageDiastolic: data.averageDiastolic ?? 0,
@@ -224,10 +213,7 @@ export default function EcommerceMetrics() {
         });
       })
       .catch((err) => {
-        console.error(
-          "Error fetching blood pressure:",
-          err
-        );
+        console.error("Error fetching blood pressure:", err);
 
         setBpData((prev) => ({
           ...prev,
@@ -241,24 +227,17 @@ export default function EcommerceMetrics() {
   // ============================================================
 
   useEffect(() => {
-
-
     ensureBloodPressureDataSource()
       .then(() => {
-        if(bpData.averageSystolic > 0 && bpData.averageDiastolic > 0){
-        return patchBloodPressure();
+        if (bpData.averageSystolic > 0 && bpData.averageDiastolic > 0) {
+          return patchBloodPressure();
         }
       })
       .then(() => {
-
-
         return fetchBloodPressure();
       })
       .catch((err) => {
-        console.error(
-          "Blood pressure initialization failed:",
-          err
-        );
+        console.error("Blood pressure initialization failed:", err);
       });
   }, []);
 
@@ -278,12 +257,7 @@ export default function EcommerceMetrics() {
         diastolic: String(randomInRange(60, 79)),
       });
     }
-  }, [
-    bpData.loading,
-    bpData.hasData,
-    bpInput.systolic,
-    bpInput.diastolic,
-  ]);
+  }, [bpData.loading, bpData.hasData, bpInput.systolic, bpInput.diastolic]);
 
   // ============================================================
   // HEART RATE
@@ -294,21 +268,16 @@ export default function EcommerceMetrics() {
     const token = Cookies.get("token");
 
     if (!userId || !token) {
-      console.error(
-        "User ID or token cookie not found"
-      );
+      console.error("User ID or token cookie not found");
       return;
     }
 
-    fetch(
-      `http://localhost:7000/google-fit/heart-rate/${userId}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    fetch(`http://localhost:7000/google-fit/heart-rate/${userId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
       .then(async (res) => {
         const data = await res.json();
 
@@ -323,17 +292,12 @@ export default function EcommerceMetrics() {
         return data;
       })
       .then((data) => {
-
-
         setBpmData({
           average_bpm: data.averageBpm ?? 0,
         });
       })
       .catch((err) => {
-        console.error(
-          "Error fetching heart rate data:",
-          err
-        );
+        console.error("Error fetching heart rate data:", err);
       });
   }, []);
 
@@ -342,22 +306,22 @@ export default function EcommerceMetrics() {
   // ============================================================
 
   useEffect(() => {
-    const userId = Cookies.get("userId");
-
-    if (!userId) {
-      console.error(
-        "User ID cookie not found"
-      );
+    // Coaches don't see cardiovascular data, so skip the fetch entirely.
+    if (isCoach) {
       return;
     }
 
-    fetch(
-      `http://localhost:7000/health_metric/cardiovascular/${userId}`,
-      {
-        method: "GET",
-        credentials: "include",
-      }
-    )
+    const userId = Cookies.get("userId");
+
+    if (!userId) {
+      console.error("User ID cookie not found");
+      return;
+    }
+
+    fetch(`http://localhost:7000/health_metric/cardiovascular/${userId}`, {
+      method: "GET",
+      credentials: "include",
+    })
       .then(async (res) => {
         const data = await res.json();
 
@@ -372,10 +336,7 @@ export default function EcommerceMetrics() {
         return data;
       })
       .then((data) => {
-        console.log(
-          "Cardiovascular data:",
-          data
-        );
+        console.log("Cardiovascular data:", data);
 
         setCardioData({
           cardio: data.cardio ?? 0,
@@ -384,27 +345,19 @@ export default function EcommerceMetrics() {
         });
       })
       .catch((err) => {
-        console.error(
-          "Error fetching cardiovascular data:",
-          err
-        );
+        console.error("Error fetching cardiovascular data:", err);
 
         setCardioData((prev) => ({
           ...prev,
           loading: false,
         }));
       });
-  }, []);
-// ---------- Heart rate state ----------
-const [hrDataSourceExists, setHrDataSourceExists] = useState(false);
-const [hrInput, setHrInput] = useState("");
-const [hrSaving, setHrSaving] = useState(false);
+  }, [isCoach]);
 
-/**
- * Make sure the user has a heart rate datasource.
- * Does NOT write any reading.
- */
-
+  // ---------- Heart rate state ----------
+  const [hrDataSourceExists, setHrDataSourceExists] = useState(false);
+  const [hrInput, setHrInput] = useState("");
+  const [hrSaving, setHrSaving] = useState(false);
 
   const patchHeartrate = (): Promise<void> => {
     const userId = Cookies.get("userId");
@@ -419,19 +372,16 @@ const [hrSaving, setHrSaving] = useState(false);
     const bpm = randomInRange(60, 79);
     setBpSaving(true);
 
-    return fetch(
-      `http://localhost:7000/google-fit/heart-rate/${userId}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          bpm
-        }),
-      }
-    )
+    return fetch(`http://localhost:7000/google-fit/heart-rate/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        bpm,
+      }),
+    })
       .then(async (res) => {
         const data = await res.json();
 
@@ -446,18 +396,12 @@ const [hrSaving, setHrSaving] = useState(false);
         return data;
       })
       .then((data) => {
-        console.log(
-          "Heart rate PATCH successful:",
-          data
-        );
+        console.log("Heart rate PATCH successful:", data);
 
         setBpSaving(false);
       })
       .catch((err) => {
-        console.error(
-          "Error patching Heart rate",
-          err
-        );
+        console.error("Error patching Heart rate", err);
 
         setBpSaving(false);
 
@@ -465,117 +409,101 @@ const [hrSaving, setHrSaving] = useState(false);
       });
   };
 
-const ensureHeartRateDataSource = (): Promise<void> => {
-  const userId = Cookies.get("userId");
-  const token = Cookies.get("token");
+  const ensureHeartRateDataSource = (): Promise<void> => {
+    const userId = Cookies.get("userId");
+    const token = Cookies.get("token");
 
-  if (!userId || !token) {
-    console.error("User ID or token not found");
-    return Promise.resolve();
-  }
+    if (!userId || !token) {
+      console.error("User ID or token not found");
+      return Promise.resolve();
+    }
 
-  return fetch(`http://localhost:7000/users/${userId}`, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then(async (res) => {
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(`Failed to fetch user: ${res.status} ${JSON.stringify(data)}`);
-      }
-      return data;
+    return fetch(`http://localhost:7000/users/${userId}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
     })
-    .then((data) => {
-      const user = Array.isArray(data) ? data[0] : data;
-
-      if (user?.heartRateDataSource != null) {
-        setHrDataSourceExists(true);
-        return;
-      }
-
-      return fetch(`http://localhost:7000/google-fit/heart-rate/datasource/${userId}`, {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(`Failed to fetch user: ${res.status} ${JSON.stringify(data)}`);
+        }
+        return data;
       })
-        .then(async (res) => {
-          const created = await res.json();
-          if (!res.ok) {
-            throw new Error(
-              `Failed to create heart rate datasource: ${res.status} ${JSON.stringify(created)}`
-            );
-          }
-          return created;
-        })
-        .then((created) => {
-          console.log("Heart rate datasource created:", created);
+      .then((data) => {
+        const user = Array.isArray(data) ? data[0] : data;
+
+        if (user?.heartRateDataSource != null) {
           setHrDataSourceExists(true);
-        });
-    });
-};
+          return;
+        }
 
-/**
- * Fetch the current heart rate average and update state.
- */
-const fetchHeartRate = (): Promise<void> => {
-  const userId = Cookies.get("userId");
-  const token = Cookies.get("token");
-
-  if (!userId || !token) {
-    console.error("User ID or token not found");
-    return Promise.resolve();
-  }
-
-  return fetch(`http://localhost:7000/google-fit/heart-rate/${userId}`, {
-    method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then(async (res) => {
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(`Failed to fetch heart rate: ${res.status} ${JSON.stringify(data)}`);
-      }
-      return data;
-    })
-    .then((data) => {
-      setBpmData({
-        average_bpm: data.averageBpm ?? data.average_bpm ?? 0,
+        return fetch(`http://localhost:7000/google-fit/heart-rate/datasource/${userId}`, {
+          method: "POST",
+          headers: { Authorization: `Bearer ${token}` },
+        })
+          .then(async (res) => {
+            const created = await res.json();
+            if (!res.ok) {
+              throw new Error(
+                `Failed to create heart rate datasource: ${res.status} ${JSON.stringify(created)}`
+              );
+            }
+            return created;
+          })
+          .then((created) => {
+            console.log("Heart rate datasource created:", created);
+            setHrDataSourceExists(true);
+          });
       });
-    })
-    .catch((err) => {
-      console.error("Error fetching heart rate data:", err);
-    });
-};
+  };
 
-/**
- * Save a REAL heart rate value typed by the user.
- */
+  const fetchHeartRate = (): Promise<void> => {
+    const userId = Cookies.get("userId");
+    const token = Cookies.get("token");
+
+    if (!userId || !token) {
+      console.error("User ID or token not found");
+      return Promise.resolve();
+    }
+
+    return fetch(`http://localhost:7000/google-fit/heart-rate/${userId}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(async (res) => {
+        const data = await res.json();
+        if (!res.ok) {
+          throw new Error(`Failed to fetch heart rate: ${res.status} ${JSON.stringify(data)}`);
+        }
+        return data;
+      })
+      .then((data) => {
+        setBpmData({
+          average_bpm: data.averageBpm ?? data.average_bpm ?? 0,
+        });
+      })
+      .catch((err) => {
+        console.error("Error fetching heart rate data:", err);
+      });
+  };
 
   useEffect(() => {
-    console.log(
-      "Starting blood pressure initialization..."
-    );
+    console.log("Starting blood pressure initialization...");
 
     ensureHeartRateDataSource()
       .then(() => {
-        console.log(
-          "Datasource ready. Calling PATCH..."
-        );
-        if(bpmData.average_bpm > 0){
-        return patchHeartrate();
+        console.log("Datasource ready. Calling PATCH...");
+        if (bpmData.average_bpm > 0) {
+          return patchHeartrate();
         }
       })
       .then(() => {
-        console.log(
-          "PATCH completed. Fetching blood pressure..."
-        );
+        console.log("PATCH completed. Fetching blood pressure...");
 
         return fetchHeartRate();
       })
       .catch((err) => {
-        console.error(
-          "Blood pressure initialization failed:",
-          err
-        );
+        console.error("Blood pressure initialization failed:", err);
       });
   }, []);
 
@@ -588,41 +516,37 @@ const fetchHeartRate = (): Promise<void> => {
 
       {/* Blood pressure */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <GroupIcon className="text-gray-800 size-6 dark:text-white/90" />
         </div>
 
         <div className="mt-5">
-
           <span className="text-sm text-gray-500 dark:text-gray-400">
             Blood pressure
           </span>
 
           <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+            {/* {bpData.loading
+              ? "Loading..."
+              : `${bpData.averageSystolic}/${bpData.averageDiastolic} mmHg`} */}
             {bpData.loading
               ? "Loading..."
-              : `${bpData.averageSystolic}/${bpData.averageDiastolic} mmHg`}
+              : `${bpData.averageSystolic} mmHg`}
           </h4>
 
           {bpSaving && (
-            <p className="mt-2 text-sm text-gray-500">
-              Saving...
-            </p>
+            <p className="mt-2 text-sm text-gray-500">Saving...</p>
           )}
-
         </div>
       </div>
 
       {/* Heart rate */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-
         <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
           <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
         </div>
 
         <div className="flex items-end justify-between mt-5">
-
           <div>
             <span className="text-sm text-gray-500 dark:text-gray-400">
               Heartrate
@@ -637,36 +561,34 @@ const fetchHeartRate = (): Promise<void> => {
             <ArrowDownIcon />
             9.05%
           </Badge>
-
         </div>
       </div>
 
-      {/* Cardiovascular */}
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-
-        <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-          <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
-        </div>
-
-        <div className="flex items-end justify-between mt-5">
-
-          <div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-              Cardiovascular
-            </span>
-
-            <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {cardioData.cardio.toFixed(2)}
-            </h4>
+      {/* Cardiovascular — hidden for coaches */}
+      {!isCoach && (
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+          <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
+            <BoxIconLine className="text-gray-800 size-6 dark:text-white/90" />
           </div>
 
-          <Badge color="error">
-            <ArrowDownIcon />
-            Risk heart attack {cardioData.status}
-          </Badge>
+          <div className="flex items-end justify-between mt-5">
+            <div>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                Cardiovascular
+              </span>
 
+              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+                {cardioData.cardio.toFixed(2)}
+              </h4>
+            </div>
+
+            <Badge color="error">
+              <ArrowDownIcon />
+              Risk heart attack {cardioData.status}
+            </Badge>
+          </div>
         </div>
-      </div>
+      )}
 
     </div>
   );
